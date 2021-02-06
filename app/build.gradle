@@ -38,7 +38,6 @@ dependencies {
 
     def support_version = "1.1.0"
     def retrofit_version = "2.6.2"
-    def picasso_version = "2.71828"
     def view_model_version = "2.2.0"
     def dagger_version = "2.22"
     def espresso_version = "3.3.0"
@@ -60,8 +59,6 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-
-    implementation "com.squareup.picasso:picasso:$picasso_version"
 
     implementation "androidx.lifecycle:lifecycle-extensions:$view_model_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$view_model_version"
