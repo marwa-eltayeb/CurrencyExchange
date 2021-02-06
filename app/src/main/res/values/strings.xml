@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Currency Exchange</string>
-    <string name="country_flag">Country Flag</string>
+    <string name="currency_flag">Currency Flag</string>
 </resources>

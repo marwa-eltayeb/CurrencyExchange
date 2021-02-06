@@ -11,7 +11,7 @@
         android:layout_height="@dimen/main_flag_height"
         android:padding="@dimen/main_flag_padding"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/country_flag"
+        android:contentDescription="@string/currency_flag"
         android:scaleType="fitXY"
         android:src="@color/grey" />
 
