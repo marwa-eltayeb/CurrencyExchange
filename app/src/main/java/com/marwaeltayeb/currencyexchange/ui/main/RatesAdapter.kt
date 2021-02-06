@@ -7,7 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.marwaeltayeb.currencyexchange.R
-import com.squareup.picasso.Picasso
+import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
+import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
 
 class RatesAdapter : RecyclerView.Adapter<RatesAdapter.RatesViewHolder>(){
 
@@ -22,9 +23,9 @@ class RatesAdapter : RecyclerView.Adapter<RatesAdapter.RatesViewHolder>(){
     override fun onBindViewHolder(holder: RatesViewHolder, position: Int) {
         val currentRate: Pair<String, Double> = rateList[position]
 
-        //Picasso.get().load("imageUrl").into(holder.countryFlag)
+        holder.countryFlag.setImageResource(getFlag(currentRate.first))
         holder.currencyCode.text = currentRate.first
-        //holder.currencyName.text = currentRate?.actorName
+        holder.currencyName.text = getCodeName(currentRate.first)
         holder.countryRate.text = currentRate.second.toString()
     }
 
