@@ -1,17 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="main_flag_height">100dp</dimen>
-    <dimen name="main_flag_width">100dp</dimen>
+    <dimen name="item_flag_height">80dp</dimen>
+    <dimen name="item_flag_width">80dp</dimen>
+    <dimen name="item_flag_padding">10dp</dimen>
+    <dimen name="item_currencyCode_height">45dp</dimen>
+    <dimen name="item_currencyCode_padding">3dp</dimen>
+    <dimen name="item_currencyCode_textSize">16sp</dimen>
+    <dimen name="item_currencyName_height">45dp</dimen>
+    <dimen name="item_currencyName_padding">3dp</dimen>
+    <dimen name="item_currencyName_textSize">14sp</dimen>
+    <dimen name="item_currencyRate_padding">3dp</dimen>
+    <dimen name="item_currencyRate_textSize">16sp</dimen>
+    <dimen name="item_currencyRate_marginEnd">3dp</dimen>
+    <dimen name="item_marginTop">10dp</dimen>
+
     <dimen name="main_flag_padding">10dp</dimen>
-    <dimen name="main_layout_width">240dp</dimen>
+    <dimen name="main_flag_height">100dp</dimen>
+    <dimen name="main_flag_width">150dp</dimen>
+    <dimen name="main_convert_height">60dp</dimen>
+    <dimen name="main_convert_width">60dp</dimen>
     <dimen name="main_currencyCode_height">45dp</dimen>
-    <dimen name="main_currencyCode_padding">3dp</dimen>
-    <dimen name="main_currencyCode_textSize">16sp</dimen>
-    <dimen name="main_currencyName_height">45dp</dimen>
-    <dimen name="main_currencyName_padding">3dp</dimen>
-    <dimen name="main_currencyName_textSize">14sp</dimen>
-    <dimen name="main_currencyRate_padding">3dp</dimen>
-    <dimen name="main_currencyRate_textSize">16sp</dimen>
-    <dimen name="main_currencyRate_marginEnd">3dp</dimen>
-    <dimen name="main_marginTop">10dp</dimen>
+    <dimen name="main_currencyCode_textSize">14sp</dimen>
+    <dimen name="main_currencyCode_padding">10dp</dimen>
+    <dimen name="main_currencyRate_height">45dp</dimen>
+    <dimen name="main_currencyRateTo_padding">10dp</dimen>
+    <dimen name="main_currencyRateFrom_padding">10dp</dimen>
+    <dimen name="main_equal_height">45dp</dimen>
+    <dimen name="main_equal_padding">10dp</dimen>
+    <dimen name="main_equal_textSize">20sp</dimen>
+    <dimen name="main_view_margin_top">10dp</dimen>
+    <dimen name="main_view_margin_bottom">5dp</dimen>
+    <dimen name="main_view_margin_left">5dp</dimen>
+    <dimen name="main_view_margin_right">5dp</dimen>
+
+
+
+
+
+
+
+
+
+
 </resources>

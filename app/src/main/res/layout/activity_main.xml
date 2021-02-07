@@ -1,14 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.main.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <ImageView
+            android:id="@+id/img_currency_flag_from"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/main_flag_height"
+            android:layout_margin="@dimen/main_flag_padding"
+            android:layout_weight="1"
+            android:contentDescription="@string/currency_flag"
+            tools:src="@color/grey" />
+
+        <ImageView
+            android:id="@+id/img_convert"
+            android:layout_width="@dimen/main_convert_width"
+            android:layout_height="@dimen/main_convert_height"
+            android:layout_gravity="center"
+            android:contentDescription="@string/currency_flag"
+            android:padding="@dimen/main_flag_padding"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_autorenew" />
+
+        <ImageView
+            android:id="@+id/img_currency_flag_to"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/main_flag_height"
+            android:layout_margin="@dimen/main_flag_padding"
+            android:layout_weight="1"
+            android:contentDescription="@string/currency_flag"
+            tools:src="@color/grey" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_currency_name_from"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/main_currencyCode_height"
+            android:gravity="start|bottom"
+            android:padding="10dp"
+            android:text="US Dollar"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_currency_name_to"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_currencyCode_height"
+            android:gravity="end"
+            android:padding="10dp"
+            android:text="Euro"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:id="@+id/txt_currency_rate_from"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/main_currencyRate_height"
+            android:layout_weight="1"
+            android:paddingStart="@dimen/main_currencyRateTo_padding"
+            android:paddingEnd="@dimen/main_currencyRateTo_padding"
+            android:text="1"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_currency_code_from"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/main_currencyCode_height"
+            android:layout_weight="1"
+            android:gravity="start|bottom"
+            android:padding="@dimen/main_currencyCode_padding"
+            android:text="USD"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/main_equal_padding"
+            android:gravity="center"
+            android:text="="
+            android:textColor="@color/grey"
+            android:textSize="@dimen/main_equal_textSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_currency_rate_to"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/main_currencyRate_height"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:padding="@dimen/main_currencyRateFrom_padding"
+            android:text="0.82443"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_currency_code_to"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/main_currencyCode_height"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:paddingStart="@dimen/main_currencyCode_padding"
+            android:paddingEnd="@dimen/main_currencyCode_padding"
+            android:text="EUR"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/main_view_margin_left"
+        android:layout_marginTop="@dimen/main_view_margin_top"
+        android:layout_marginEnd="@dimen/main_view_margin_right"
+        android:layout_marginBottom="@dimen/main_view_margin_bottom"
+        android:background="@android:color/black" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rc_rates_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/list_item_rates"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        tools:listitem="@layout/list_item_rates" />
+</LinearLayout>

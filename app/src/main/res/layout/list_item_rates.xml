@@ -7,9 +7,9 @@
 
     <ImageView
         android:id="@+id/img_country_flag"
-        android:layout_width="@dimen/main_flag_width"
-        android:layout_height="@dimen/main_flag_height"
-        android:padding="@dimen/main_flag_padding"
+        android:layout_width="@dimen/item_flag_width"
+        android:layout_height="@dimen/item_flag_height"
+        android:padding="@dimen/item_flag_padding"
         android:adjustViewBounds="true"
         android:contentDescription="@string/currency_flag"
         android:scaleType="fitXY"
@@ -23,23 +23,23 @@
         <TextView
             android:id="@+id/txt_currency_code"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/main_currencyCode_height"
+            android:layout_height="@dimen/item_currencyCode_height"
             android:ellipsize="end"
             android:gravity="start|bottom"
             android:textStyle="bold"
-            android:padding="@dimen/main_currencyCode_padding"
+            android:padding="@dimen/item_currencyCode_padding"
             android:textColor="@color/grey"
-            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textSize="@dimen/item_currencyCode_textSize"
             tools:text="EUR" />
 
         <TextView
             android:id="@+id/txt_currency_name"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/main_currencyName_height"
+            android:layout_height="@dimen/item_currencyName_height"
             android:gravity="start"
-            android:padding="@dimen/main_currencyName_padding"
+            android:padding="@dimen/item_currencyName_padding"
             android:textColor="@color/grey"
-            android:textSize="@dimen/main_currencyName_textSize"
+            android:textSize="@dimen/item_currencyName_textSize"
             android:text="Euro" />
     </LinearLayout>
 
@@ -49,8 +49,8 @@
         android:layout_height="match_parent"
         android:gravity="end|center"
         android:textColor="@color/grey"
-        android:layout_marginEnd="@dimen/main_currencyRate_marginEnd"
-        android:padding="@dimen/main_currencyRate_padding"
-        android:textSize="@dimen/main_currencyRate_textSize"
+        android:layout_marginEnd="@dimen/item_currencyRate_marginEnd"
+        android:padding="@dimen/item_currencyRate_padding"
+        android:textSize="@dimen/item_currencyRate_textSize"
         tools:text="1.588" />
 </LinearLayout>
