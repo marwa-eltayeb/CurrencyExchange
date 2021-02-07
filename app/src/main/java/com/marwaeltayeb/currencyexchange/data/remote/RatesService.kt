@@ -14,4 +14,10 @@ interface RatesService {
     fun getLatestRatesByBase(
         @Query("base") base: String,
     ): Call<RateApiResponse>
+
+    @GET("latest")
+    fun getSpecificExchangeRate(
+        @Query("base") base: String,
+        @Query("symbols") symbol: String,
+        ): Call<RateApiResponse>
 }

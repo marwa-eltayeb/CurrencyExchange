@@ -6,7 +6,7 @@ class Const {
         const val FROM_DOLLAR = "USD"
         const val TO_EURO = "EUR"
 
-        const val FROM_EURO = "USD"
-        const val TO_DOLLAR = "EUR"
+        const val FROM_EURO = "EUR"
+        const val TO_DOLLAR = "USD"
     }
 }
