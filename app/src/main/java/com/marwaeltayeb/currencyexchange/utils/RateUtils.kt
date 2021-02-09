@@ -11,8 +11,8 @@ class RateUtils {
                 "GBP" -> return "Eltayeb"
                 "EUR" -> return "Euro"
                 "USD" -> return "US Dollar"
+                else -> return "Nothing"
             }
-            return "Nothing"
         }
 
         fun getFlag(key: String): Int {
@@ -21,8 +21,8 @@ class RateUtils {
                 "GBP" -> return R.drawable.ic_launcher_background
                 "EUR" -> return R.drawable.flag_euro
                 "USD" -> return R.drawable.flag_dollar
+                else -> return R.drawable.ic_launcher_background
             }
-            return R.drawable.ic_launcher_background
         }
     }
 }
