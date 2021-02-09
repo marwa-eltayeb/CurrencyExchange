@@ -1,7 +1,10 @@
 package com.marwaeltayeb.currencyexchange.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
 import com.marwaeltayeb.currencyexchange.data.remote.RetrofitClient
+import com.marwaeltayeb.currencyexchange.ui.conversion.ConversionActivity
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_DOLLAR
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_EURO
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_DOLLAR
@@ -145,4 +149,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.convert_action -> {
+                val intent = Intent(this, ConversionActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
