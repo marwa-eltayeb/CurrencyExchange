@@ -6,4 +6,38 @@
     <string name="to">To</string>
     <string name="one_value">1</string>
     <string name="equal">=</string>
+
+    <!--Currencies-->
+    <string name="cad">CAD</string>
+    <string name="hkd">HKD</string>
+    <string name="isk">ISK</string>
+    <string name="php">PHP</string>
+    <string name="dkk">DKK</string>
+    <string name="huf">HUF</string>
+    <string name="czk">CZK</string>
+    <string name="aud">AUD</string>
+    <string name="ron">RON</string>
+    <string name="sek">SEK</string>
+    <string name="idr">IDR</string>
+    <string name="inr">INR</string>
+    <string name="brl">BRL</string>
+    <string name="rub">RUB</string>
+    <string name="hrk">HRK</string>
+    <string name="jpy">JPY</string>
+    <string name="thb">THB</string>
+    <string name="chf">CHF</string>
+    <string name="sgd">SGD</string>
+    <string name="pln">PLN</string>
+    <string name="bgn">BGN</string>
+    <string name="trry">TRY</string>
+    <string name="cny">CNY</string>
+    <string name="nok">NOK</string>
+    <string name="nzd">NZD</string>
+    <string name="zar">ZAR</string>
+    <string name="usd">USD</string>
+    <string name="mxn">MXN</string>
+    <string name="ils">ILS</string>
+    <string name="gbp">GBP</string>
+    <string name="krw">KRW</string>
+    <string name="eur">EUR</string>
 </resources>
