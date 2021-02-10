@@ -33,13 +33,7 @@
     <dimen name="main_view_margin_left">5dp</dimen>
     <dimen name="main_view_margin_right">5dp</dimen>
 
-
-
-
-
-
-
-
-
+    <dimen name="convert_textSize">16sp</dimen>
+    <dimen name="convert_padding">10dp</dimen>
 
 </resources>

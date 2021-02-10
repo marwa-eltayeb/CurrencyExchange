@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-            android:name=".ui.conversion.ConversionActivity"
+            android:name=".ui.conversion.ConvertActivity"
             android:parentActivityName=".ui.main.MainActivity"
             android:label="@string/converter">
             <meta-data

@@ -2,30 +2,23 @@ package com.marwaeltayeb.currencyexchange.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.marwaeltayeb.currencyexchange.R
-import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
-import com.marwaeltayeb.currencyexchange.data.remote.RetrofitClient
-import com.marwaeltayeb.currencyexchange.ui.conversion.ConversionActivity
+
+import com.marwaeltayeb.currencyexchange.ui.conversion.ConvertActivity
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_DOLLAR
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_EURO
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_DOLLAR
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_EURO
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 private const val TAG = "MainActivity"
 
@@ -99,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         ratesViewModel.getSpecificExchangeRate(FROM_DOLLAR, TO_EURO).observe(this, {
             valueOne = it.get(0).second.toString()
             txt_currency_rate_to.text = valueOne
-
         })
 
         img_currency_flag_from.setBackgroundResource(getFlag(FROM_DOLLAR))
@@ -158,7 +150,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.convert_action -> {
-                val intent = Intent(this, ConversionActivity::class.java)
+                val intent = Intent(this, ConvertActivity::class.java)
                 startActivity(intent)
                 return true
             }

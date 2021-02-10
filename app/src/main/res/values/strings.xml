@@ -2,4 +2,8 @@
     <string name="app_name">Currency Exchange</string>
     <string name="currency_flag">Currency Flag</string>
     <string name="converter">Converter</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="one_value">1</string>
+    <string name="equal">=</string>
 </resources>
