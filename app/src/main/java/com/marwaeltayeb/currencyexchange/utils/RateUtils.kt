@@ -9,75 +9,76 @@ class RateUtils {
             when (key) {
                 "EUR" -> return "Euro"
                 "USD" -> return "US Dollar"
-                "CAD" -> return "Marwa"
-                "HKD" -> return "Marwa"
-                "ISK" -> return "Marwa"
-                "PHP" -> return "Marwa"
-                "DKK" -> return "Marwa"
-                "HUF" -> return "Marwa"
-                "CZK" -> return "Marwa"
-                "AUD" -> return "Marwa"
-                "RON" -> return "Marwa"
-                "SEK" -> return "Marwa"
-                "IDR" -> return "Marwa"
-                "INR" -> return "Marwa"
-                "BRL" -> return "Marwa"
-                "RUB" -> return "Marwa"
-                "HRK" -> return "Marwa"
-                "JPY" -> return "Marwa"
-                "THB" -> return "Marwa"
-                "CHF" -> return "Marwa"
-                "SGD" -> return "Marwa"
-                "PLN" -> return "Marwa"
-                "BGN" -> return "Marwa"
-                "TRY" -> return "Marwa"
-                "CNY" -> return "Marwa"
-                "NOK" -> return "Marwa"
-                "NZD" -> return "Marwa"
-                "ZAR" -> return "Marwa"
-                "MXN" -> return "Marwa"
-                "ILS" -> return "Marwa"
-                "GBP" -> return "Marwa"
-                "KRW" -> return "Marwa"
-                else -> return "Nothing"
+                "CAD" -> return "Canadian dollar"
+                "HKD" -> return "Hong Kong dollar"
+                "ISK" -> return "Icelandic krona"
+                "PHP" -> return "Philippine peso"
+                "DKK" -> return "Danish krone"
+                "HUF" -> return "Hungarian forint"
+                "CZK" -> return "Czech koruna"
+                "AUD" -> return "Australian Dollar"
+                "RON" -> return "Romanian new leu"
+                "SEK" -> return "Swedish Krona"
+                "IDR" -> return "Indonesian rupiah"
+                "INR" -> return "Indian rupee"
+                "BRL" -> return "Brazilian real"
+                "RUB" -> return "Russian ruble"
+                "HRK" -> return "Croatian kuna"
+                "JPY" -> return "Japanese yen"
+                "THB" -> return "Thai Baht"
+                "CHF" -> return "Swiss Franc"
+                "SGD" -> return "Singapore Dollar"
+                "PLN" -> return "Polish Zloty"
+                "BGN" -> return "Bulgarian Lev"
+                "TRY" -> return "Turkish Lira"
+                "CNY" -> return "Chinese Yuan Renminbi"
+                "NOK" -> return "Norwegian Krone"
+                "NZD" -> return "New Zealand Dollar"
+                "ZAR" -> return "South African Rand"
+                "MXN" -> return "Mexican Peso"
+                "ILS" -> return "Israeli New Shekel"
+                "GBP" -> return "British Pound Sterling"
+                "KRW" -> return "South Korean Won"
+                "MYR" -> return "Malaysian Ringgit"
+                else -> return "None"
             }
         }
 
         fun getFlag(key: String): Int {
             when (key) {
-                "EUR" -> return R.drawable.flag_euro
-                "USD" -> return R.drawable.flag_dollar
-                "CAD" -> return R.drawable.ic_launcher_background
-                "HKD" -> return R.drawable.ic_launcher_background
-                "ISK" -> return R.drawable.ic_launcher_background
-                "PHP" -> return R.drawable.ic_launcher_background
-                "DKK" -> return R.drawable.ic_launcher_background
-                "HUF" -> return R.drawable.ic_launcher_background
-                "CZK" -> return R.drawable.ic_launcher_background
-                "AUD" -> return R.drawable.ic_launcher_background
-                "RON" -> return R.drawable.ic_launcher_background
-                "SEK" -> return R.drawable.ic_launcher_background
-                "IDR" -> return R.drawable.ic_launcher_background
-                "INR" -> return R.drawable.ic_launcher_background
-                "BRL" -> return R.drawable.ic_launcher_background
-                "RUB" -> return R.drawable.ic_launcher_background
-                "HRK" -> return R.drawable.ic_launcher_background
-                "JPY" -> return R.drawable.ic_launcher_background
-                "THB" -> return R.drawable.ic_launcher_background
-                "CHF" -> return R.drawable.ic_launcher_background
-                "SGD" -> return R.drawable.ic_launcher_background
-                "PLN" -> return R.drawable.ic_launcher_background
-                "BGN" -> return R.drawable.ic_launcher_background
-                "TRY" -> return R.drawable.ic_launcher_background
-                "CNY" -> return R.drawable.ic_launcher_background
-                "NOK" -> return R.drawable.ic_launcher_background
-                "NZD" -> return R.drawable.ic_launcher_background
-                "ZAR" -> return R.drawable.ic_launcher_background
-                "MXN" -> return R.drawable.ic_launcher_background
-                "ILS" -> return R.drawable.ic_launcher_background
-                "GBP" -> return R.drawable.ic_launcher_background
-                "KRW" -> return R.drawable.ic_launcher_background
-                else -> return R.drawable.ic_launcher_background
+                "EUR" -> return R.drawable.flag_eur
+                "USD" -> return R.drawable.flag_usd
+                "CAD" -> return R.drawable.flag_cad
+                "HKD" -> return R.drawable.flag_hkd
+                "ISK" -> return R.drawable.flag_isk
+                "PHP" -> return R.drawable.flag_php
+                "DKK" -> return R.drawable.flag_dkk
+                "HUF" -> return R.drawable.flag_huf
+                "CZK" -> return R.drawable.flag_czk
+                "AUD" -> return R.drawable.flag_aud
+                "RON" -> return R.drawable.flag_ron
+                "SEK" -> return R.drawable.flag_sek
+                "IDR" -> return R.drawable.flag_idr
+                "INR" -> return R.drawable.flag_inr
+                "BRL" -> return R.drawable.flag_brl
+                "RUB" -> return R.drawable.flag_rub
+                "HRK" -> return R.drawable.flag_hrk
+                "JPY" -> return R.drawable.flag_jpy
+                "THB" -> return R.drawable.flag_thb
+                "CHF" -> return R.drawable.flag_chf
+                "SGD" -> return R.drawable.flag_sgd
+                "PLN" -> return R.drawable.flag_pln
+                "BGN" -> return R.drawable.flag_bgn
+                "TRY" -> return R.drawable.flag_try
+                "CNY" -> return R.drawable.flag_cny
+                "NOK" -> return R.drawable.flag_nok
+                "NZD" -> return R.drawable.flag_nzd
+                "ZAR" -> return R.drawable.flag_zar
+                "MXN" -> return R.drawable.flag_mxn
+                "ILS" -> return R.drawable.flag_ils
+                "GBP" -> return R.drawable.flag_gbp
+                "KRW" -> return R.drawable.flag_krw
+                else -> return R.drawable.ic_money
             }
         }
     }
