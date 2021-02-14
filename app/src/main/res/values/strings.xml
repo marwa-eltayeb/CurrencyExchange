@@ -40,4 +40,5 @@
     <string name="gbp">GBP</string>
     <string name="krw">KRW</string>
     <string name="eur">EUR</string>
+    <string name="choose_currency">Choose Currency</string>
 </resources>

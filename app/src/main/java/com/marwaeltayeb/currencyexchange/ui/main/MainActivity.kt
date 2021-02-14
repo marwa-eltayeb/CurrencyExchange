@@ -20,8 +20,6 @@ import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_EURO
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
 
-private const val TAG = "MainActivity"
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var img_currency_flag_from: ImageView
@@ -94,8 +92,8 @@ class MainActivity : AppCompatActivity() {
             txt_currency_rate_to.text = valueOne
         })
 
-        img_currency_flag_from.setBackgroundResource(getFlag(FROM_DOLLAR))
-        img_currency_flag_to.setBackgroundResource(getFlag(TO_EURO))
+        img_currency_flag_from.setImageResource(getFlag(FROM_DOLLAR))
+        img_currency_flag_to.setImageResource(getFlag(TO_EURO))
         txt_currency_name_from.text = getCodeName(FROM_DOLLAR)
         txt_currency_name_to.text = getCodeName(TO_EURO)
 

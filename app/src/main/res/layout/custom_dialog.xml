@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lst_codes"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:drawSelectorOnTop="true"
-    android:orientation="vertical"
-    android:dividerHeight="1px"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="500dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/purple_500"
+        android:text="@string/choose_currency"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@color/white" />
+
+    <ListView
+        android:id="@+id/lst_codes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="1px"
+        android:divider="@color/grey"
+        android:drawSelectorOnTop="true"
+        android:orientation="vertical" />
+</LinearLayout>
