@@ -1,11 +1,12 @@
 package com.marwaeltayeb.currencyexchange.ui.main
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.Window
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.marwaeltayeb.currencyexchange.R
 
 import com.marwaeltayeb.currencyexchange.ui.conversion.ConvertActivity
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_DOLLAR
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_EURO
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_DOLLAR
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_EURO
+import com.marwaeltayeb.currencyexchange.utils.Code
+import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM
+import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
 
@@ -37,10 +37,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ratesAdapter: RatesAdapter
     private lateinit var ratesViewModel:RatesViewModel
 
-    private var isConverted = false
-    private var valueOne = ""
-    private var valueTwo = ""
+    private var isSwitched = true
 
+    var baseCurrency = FROM
+    var convertedToCurrency = TO
+
+    private lateinit var listview: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +53,18 @@ class MainActivity : AppCompatActivity() {
         ratesViewModel = ViewModelProvider(this).get(RatesViewModel::class.java)
 
         loadAllRates()
-        loadSpecificRate()
+        loadDefaultRate()
 
         img_convert.setOnClickListener {
             exchangeRate()
+        }
+
+        img_currency_flag_from.setOnClickListener {
+            showCustomAlertDialog(true)
+        }
+
+        img_currency_flag_to.setOnClickListener {
+            showCustomAlertDialog(false)
         }
     }
 
@@ -86,56 +96,49 @@ class MainActivity : AppCompatActivity() {
         ratesAdapter.notifyDataSetChanged()
     }
 
-    private fun loadSpecificRate() {
-        ratesViewModel.getSpecificExchangeRate(FROM_DOLLAR, TO_EURO).observe(this, {
-            valueOne = it.get(0).second.toString()
-            txt_currency_rate_to.text = valueOne
-        })
+    private fun loadDefaultRate() {
 
-        img_currency_flag_from.setImageResource(getFlag(FROM_DOLLAR))
-        img_currency_flag_to.setImageResource(getFlag(TO_EURO))
-        txt_currency_name_from.text = getCodeName(FROM_DOLLAR)
-        txt_currency_name_to.text = getCodeName(TO_EURO)
+        getRate(baseCurrency, convertedToCurrency)
 
+        img_currency_flag_from.setImageResource(getFlag(baseCurrency))
+        txt_currency_name_from.text = getCodeName(baseCurrency)
+        txt_currency_code_from.text = baseCurrency
         txt_currency_rate_from.text = "1"
-        txt_currency_code_from.text = FROM_DOLLAR
-        txt_currency_code_to.text = TO_EURO
 
+        img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
+        txt_currency_name_to.text = getCodeName(convertedToCurrency)
+        txt_currency_code_to.text = convertedToCurrency
     }
 
     private fun exchangeRate(){
-        if(!isConverted) {
+        if(isSwitched) {
 
-            ratesViewModel.getSpecificExchangeRate(FROM_EURO, TO_DOLLAR).observe(this, {
-                valueTwo = it.get(0).second.toString()
-                txt_currency_rate_to.text = valueTwo
-            })
+            getRate(convertedToCurrency, baseCurrency)
 
-            img_currency_flag_from.setBackgroundResource(getFlag(TO_EURO))
-            img_currency_flag_to.setBackgroundResource(getFlag(FROM_DOLLAR))
-            txt_currency_name_from.text = getCodeName(TO_EURO)
-            txt_currency_name_to.text = getCodeName(FROM_DOLLAR)
+            img_currency_flag_from.setImageResource(getFlag(convertedToCurrency))
+            txt_currency_name_from.text = getCodeName(convertedToCurrency)
+            txt_currency_code_from.text = convertedToCurrency
             txt_currency_rate_from.text = "1"
-            txt_currency_code_from.text = TO_EURO
-            txt_currency_code_to.text = FROM_DOLLAR
 
-            isConverted = true
+            img_currency_flag_to.setImageResource(getFlag(baseCurrency))
+            txt_currency_name_to.text = getCodeName(baseCurrency)
+            txt_currency_code_to.text = baseCurrency
+
+            isSwitched = false
         }else {
 
-            ratesViewModel.getSpecificExchangeRate(FROM_DOLLAR, TO_EURO).observe(this, {
-                valueOne = it.get(0).second.toString()
-                txt_currency_rate_to.text = valueOne
-            })
+            getRate(baseCurrency, convertedToCurrency)
 
-            img_currency_flag_from.setBackgroundResource(getFlag(FROM_DOLLAR))
-            img_currency_flag_to.setBackgroundResource(getFlag(TO_EURO))
-            txt_currency_name_from.text = getCodeName(FROM_DOLLAR)
-            txt_currency_name_to.text = getCodeName(TO_EURO)
+            img_currency_flag_from.setImageResource(getFlag(baseCurrency))
+            txt_currency_name_from.text = getCodeName(baseCurrency)
+            txt_currency_code_from.text = baseCurrency
             txt_currency_rate_from.text = "1"
-            txt_currency_code_from.text = FROM_DOLLAR
-            txt_currency_code_to.text = TO_EURO
 
-            isConverted = false
+            img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
+            txt_currency_name_to.text = getCodeName(convertedToCurrency)
+            txt_currency_code_to.text = convertedToCurrency
+
+            isSwitched = true
         }
     }
 
@@ -154,5 +157,49 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showCustomAlertDialog(isFromCurrency: Boolean) {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.custom_dialog)
+
+        listview = dialog.findViewById(R.id.lst_codes)
+        val adapter: ListAdapter = ArrayAdapter<String>(
+            this, android.R.layout.simple_list_item_1, Code.getCurrencyCodes(
+                this
+            )
+        )
+        listview.setAdapter(adapter)
+
+        listview.setOnItemClickListener { myAdapter, myView, myItemInt, mylng ->
+            if (isFromCurrency) {
+                baseCurrency = listview.getItemAtPosition(myItemInt) as String
+                img_currency_flag_from.setImageResource(getFlag(baseCurrency))
+                txt_currency_code_from.text = baseCurrency
+                txt_currency_name_from.text = getCodeName(baseCurrency)
+
+                getRate(baseCurrency, convertedToCurrency)
+            } else {
+                convertedToCurrency = listview.getItemAtPosition(myItemInt) as String
+                img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
+                txt_currency_code_to.text = convertedToCurrency
+                txt_currency_name_to.text = getCodeName(convertedToCurrency)
+
+                getRate(baseCurrency, convertedToCurrency)
+            }
+            dialog.cancel()
+        }
+        dialog.show()
+    }
+
+    private fun getRate(from:String, to:String) {
+        if (from == to) {
+            txt_currency_rate_to.text = "???"
+        } else {
+            ratesViewModel.getSpecificExchangeRate(from, to).observe(this, {
+                txt_currency_rate_to.text = String.format("%.4f", it.get(0).second)
+            })
+        }
     }
 }
