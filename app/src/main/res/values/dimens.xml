@@ -20,6 +20,7 @@
     <dimen name="main_convert_height">60dp</dimen>
     <dimen name="main_convert_width">60dp</dimen>
     <dimen name="main_currencyCode_height">45dp</dimen>
+    <dimen name="main_textSize">12sp</dimen>
     <dimen name="main_currencyCode_textSize">14sp</dimen>
     <dimen name="main_currencyCode_padding">10dp</dimen>
     <dimen name="main_currencyRate_height">45dp</dimen>

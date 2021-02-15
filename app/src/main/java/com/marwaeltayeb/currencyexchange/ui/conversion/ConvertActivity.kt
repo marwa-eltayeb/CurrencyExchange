@@ -11,12 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.utils.Code.Companion.getCurrencyCodes
-import com.marwaeltayeb.currencyexchange.utils.Const
+import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM
+import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
 
-
 class ConvertActivity : AppCompatActivity() {
-
 
     private lateinit var imgCurrencyFlagFrom: ImageView
     private lateinit var imgCurrencyFlagTo: ImageView
@@ -31,8 +30,8 @@ class ConvertActivity : AppCompatActivity() {
 
     private lateinit var listview: ListView
 
-    var baseCurrency = Const.FROM_DOLLAR
-    var convertedToCurrency = Const.FROM_EURO
+    var baseCurrency = FROM
+    var convertedToCurrency = TO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +47,13 @@ class ConvertActivity : AppCompatActivity() {
 
         covertViewModel = ViewModelProvider(this).get(ConvertViewModel::class.java)
 
-        txtCurrencyCodeFrom.text = Const.FROM_DOLLAR
-        txtCurrencyCodeTo.text = Const.TO_EURO
-        imgCurrencyFlagFrom.setImageResource(getFlag(Const.FROM_DOLLAR))
-        imgCurrencyFlagTo.setImageResource(getFlag(Const.FROM_EURO))
+        txtCurrencyCodeFrom.text = baseCurrency
+        imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
 
-        getDefaultRate()
+        txtCurrencyCodeTo.text = convertedToCurrency
+        imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+
+        getRate()
 
         textChanged()
 
@@ -75,7 +75,7 @@ class ConvertActivity : AppCompatActivity() {
             ).show()
             txtCurrencyRateTo.text = "???"
         } else {
-            getCustomRate()
+            getRate()
 
             val text = ((etFirstConversion.text.toString().toDouble()) * rate).toString()
             etSecondConversion.setText(text)
@@ -120,26 +120,20 @@ class ConvertActivity : AppCompatActivity() {
                 baseCurrency = listview.getItemAtPosition(myItemInt) as String
                 imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
                 txtCurrencyCodeFrom.text = baseCurrency
-                getCustomRate()
+                getRate()
             } else {
                 convertedToCurrency = listview.getItemAtPosition(myItemInt) as String
                 imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
                 txtCurrencyCodeTo.text = convertedToCurrency
-                getCustomRate()
+                getRate()
             }
             dialog.cancel()
         }
         dialog.show()
     }
 
-    private fun getDefaultRate() {
-        covertViewModel.exchangeRate(Const.FROM_DOLLAR, Const.TO_EURO).observe(this, {
-            rate = it.get(0).second
-            txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
-        })
-    }
 
-    private fun getCustomRate() {
+    private fun getRate() {
         if (baseCurrency == convertedToCurrency) {
             txtCurrencyRateTo.text = "???"
         } else {

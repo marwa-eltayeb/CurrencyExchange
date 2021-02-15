@@ -19,6 +19,7 @@
             android:layout_margin="@dimen/main_flag_padding"
             android:layout_weight="1"
             android:contentDescription="@string/currency_flag"
+            android:scaleType="fitXY"
             tools:src="@color/grey" />
 
         <ImageView
@@ -38,6 +39,7 @@
             android:layout_margin="@dimen/main_flag_padding"
             android:layout_weight="1"
             android:contentDescription="@string/currency_flag"
+            android:scaleType="fitXY"
             tools:src="@color/grey" />
     </LinearLayout>
 
@@ -79,33 +81,33 @@
             android:id="@+id/txt_currency_rate_from"
             android:layout_width="0dp"
             android:layout_height="@dimen/main_currencyRate_height"
-            android:layout_weight="1"
+            android:layout_weight=".7"
             android:paddingStart="@dimen/main_currencyRateTo_padding"
             android:paddingEnd="@dimen/main_currencyRateTo_padding"
-            tools:text="1"
             android:textColor="@color/grey"
-            android:textSize="@dimen/main_currencyCode_textSize"
-            android:textStyle="bold" />
+            android:textSize="@dimen/main_textSize"
+            android:textStyle="bold"
+            tools:text="1" />
 
         <TextView
             android:id="@+id/txt_currency_code_from"
             android:layout_width="0dp"
             android:layout_height="@dimen/main_currencyCode_height"
-            android:layout_weight="1"
+            android:layout_weight=".8"
             android:gravity="start|bottom"
             android:padding="@dimen/main_currencyCode_padding"
             android:text="USD"
             android:textColor="@color/grey"
-            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textSize="@dimen/main_textSize"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="@dimen/main_equal_padding"
             android:gravity="center"
-            android:text="="
+            android:padding="@dimen/main_equal_padding"
+            android:text="@string/equal"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_equal_textSize"
             android:textStyle="bold" />
@@ -114,13 +116,13 @@
             android:id="@+id/txt_currency_rate_to"
             android:layout_width="0dp"
             android:layout_height="@dimen/main_currencyRate_height"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="end"
             android:padding="@dimen/main_currencyRateFrom_padding"
-            tools:text="0.82443"
             android:textColor="@color/grey"
-            android:textSize="@dimen/main_currencyCode_textSize"
-            android:textStyle="bold" />
+            android:textSize="@dimen/main_textSize"
+            android:textStyle="bold"
+            tools:text="0.82443" />
 
         <TextView
             android:id="@+id/txt_currency_code_to"
@@ -132,7 +134,7 @@
             android:paddingEnd="@dimen/main_currencyCode_padding"
             android:text="EUR"
             android:textColor="@color/grey"
-            android:textSize="@dimen/main_currencyCode_textSize"
+            android:textSize="@dimen/main_textSize"
             android:textStyle="bold" />
     </LinearLayout>
 
