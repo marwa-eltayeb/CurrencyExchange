@@ -78,6 +78,7 @@ class RateUtils {
                 "ILS" -> return R.drawable.flag_ils
                 "GBP" -> return R.drawable.flag_gbp
                 "KRW" -> return R.drawable.flag_krw
+                "MYR" -> return R.drawable.flag_myr
                 else -> return R.drawable.ic_money
             }
         }

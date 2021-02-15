@@ -9,7 +9,7 @@
     <dimen name="item_currencyName_height">45dp</dimen>
     <dimen name="item_currencyName_padding">3dp</dimen>
     <dimen name="item_currencyName_textSize">14sp</dimen>
-    <dimen name="item_currencyRate_padding">3dp</dimen>
+    <dimen name="item_currencyRate_padding">10dp</dimen>
     <dimen name="item_currencyRate_textSize">16sp</dimen>
     <dimen name="item_currencyRate_marginEnd">3dp</dimen>
     <dimen name="item_marginTop">10dp</dimen>

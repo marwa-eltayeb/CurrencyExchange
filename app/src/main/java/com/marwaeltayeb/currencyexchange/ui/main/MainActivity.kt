@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         ratesViewModel = ViewModelProvider(this).get(RatesViewModel::class.java)
 
-        loadAllRates()
+        loadAllRates(FROM)
         loadDefaultRate()
 
         img_convert.setOnClickListener {
@@ -87,8 +87,8 @@ class MainActivity : AppCompatActivity() {
         ratesAdapter = RatesAdapter()
     }
 
-    private fun loadAllRates() {
-        ratesViewModel.getAllRates().observe(this, {
+    private fun loadAllRates(base: String) {
+        ratesViewModel.getAllRates(base).observe(this, {
             ratesAdapter.setRates(it)
         })
 
@@ -115,6 +115,8 @@ class MainActivity : AppCompatActivity() {
 
             getRate(convertedToCurrency, baseCurrency)
 
+            loadAllRates(convertedToCurrency)
+
             img_currency_flag_from.setImageResource(getFlag(convertedToCurrency))
             txt_currency_name_from.text = getCodeName(convertedToCurrency)
             txt_currency_code_from.text = convertedToCurrency
@@ -128,6 +130,8 @@ class MainActivity : AppCompatActivity() {
         }else {
 
             getRate(baseCurrency, convertedToCurrency)
+
+            loadAllRates(baseCurrency)
 
             img_currency_flag_from.setImageResource(getFlag(baseCurrency))
             txt_currency_name_from.text = getCodeName(baseCurrency)

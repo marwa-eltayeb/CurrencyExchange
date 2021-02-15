@@ -7,8 +7,8 @@ class RatesViewModel : ViewModel() {
 
     private var ratesRepository: RatesRepository? = RatesRepository()
 
-    fun getAllRates(): LiveData<List<Pair<String,Double>>> {
-        return ratesRepository!!.getMutableLiveData()
+    fun getAllRates(base: String): LiveData<List<Pair<String,Double>>> {
+        return ratesRepository!!.getMutableLiveData(base)
     }
 
     fun getSpecificExchangeRate(base: String, symbol: String): LiveData<List<Pair<String,Double>>> {
