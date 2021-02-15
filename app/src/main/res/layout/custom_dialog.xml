@@ -7,7 +7,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/purple_500"
+        android:background="@color/colorPrimary"
         android:text="@string/choose_currency"
         android:gravity="center"
         android:textAllCaps="true"
