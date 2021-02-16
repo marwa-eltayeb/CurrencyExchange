@@ -85,10 +85,14 @@ class ConvertActivity : AppCompatActivity() {
     private fun textChanged() {
         etFirstConversion.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                try {
-                    getResult()
-                } catch (e: Exception) {
-                    Toast.makeText(applicationContext, "Type a value", Toast.LENGTH_SHORT).show()
+                if (etFirstConversion.text.isBlank()) {
+                    etSecondConversion.setText("")
+                }else{
+                    try {
+                        getResult()
+                    } catch (e: Exception) {
+                        Toast.makeText(applicationContext, "Type a value", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
