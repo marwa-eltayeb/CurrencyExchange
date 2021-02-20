@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -55,13 +55,19 @@
             android:textSize="@dimen/convert_textSize" />
     </LinearLayout>
 
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_gravity="center"
+        android:layout_marginTop="1dp"
+        android:layout_width="340dp"
+        android:layout_height="300dp" />
 
     <LinearLayout
         android:id="@+id/ll_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:paddingTop="30dp"
         android:paddingBottom="30dp"
