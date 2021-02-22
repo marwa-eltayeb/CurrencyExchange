@@ -1,6 +1,7 @@
 package com.marwaeltayeb.currencyexchange.ui.conversion
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,12 +9,24 @@ import android.util.Log
 import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.utils.Code.Companion.getCurrencyCodes
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
+import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getEndDate
+import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getStartDate
+
+private const val TAG = "ConvertActivity"
 
 class ConvertActivity : AppCompatActivity() {
 
@@ -64,6 +77,8 @@ class ConvertActivity : AppCompatActivity() {
         imgCurrencyFlagTo.setOnClickListener {
             showCustomAlertDialog(false)
         }
+
+        getHistoricalRates()
     }
 
     private fun getResult() {
@@ -125,11 +140,13 @@ class ConvertActivity : AppCompatActivity() {
                 imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
                 txtCurrencyCodeFrom.text = baseCurrency
                 getRate()
+                getHistoricalRates()
             } else {
                 convertedToCurrency = listview.getItemAtPosition(myItemInt) as String
                 imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
                 txtCurrencyCodeTo.text = convertedToCurrency
                 getRate()
+                getHistoricalRates()
             }
             dialog.cancel()
         }
@@ -147,4 +164,63 @@ class ConvertActivity : AppCompatActivity() {
             })
         }
     }
+
+
+    private fun getHistoricalRates(){
+        covertViewModel.getHistoricalRates(getStartDate(),getEndDate(),baseCurrency, convertedToCurrency).observe(this, { data ->
+
+            val response = data.rates.toSortedMap()
+            val dates = response.keys
+            val listOfRates = arrayListOf<Entry>()
+            repeat(5){ i ->
+                listOfRates.add(Entry(i.toFloat(), response.values.elementAt(i)[convertedToCurrency]!!.toFloat()))
+            }
+
+            setLineChart(dates, listOfRates)
+        })
+    }
+
+
+    private fun setLineChart(dates: MutableSet<String>, listOfRates:  ArrayList<Entry>){
+        val chart: LineChart = findViewById(R.id.chart)
+        chart.setDragEnabled(true)
+        chart.setScaleEnabled(false)
+
+        val lineDataSet = LineDataSet(listOfRates, getString(R.string.currency_rates))
+        lineDataSet.fillAlpha = 110
+        lineDataSet.color = Color.RED
+        lineDataSet.valueTextSize = 8f
+        lineDataSet.valueTextColor = Color.GREEN
+        lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+        lineDataSet.setDrawFilled(true)
+        lineDataSet.fillColor = ContextCompat.getColor(this,R.color.colorPrimaryVariant)
+
+        val dataSets = arrayListOf<ILineDataSet>()
+        dataSets.add(lineDataSet)
+
+        val xAxis = chart.xAxis
+        xAxis.valueFormatter = XAxisValueFormatter(dates.toTypedArray())
+        xAxis.granularity = 1f
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.labelCount = 5
+        xAxis.labelRotationAngle = -45f
+
+        val lineData = LineData(dataSets)
+        lineData.setDrawValues(true)
+        chart.data = lineData
+        chart.invalidate()
+
+        // Hide Left Axis
+        chart.axisLeft.textColor = ContextCompat.getColor(this,R.color.white)
+        // Change Label Text Color
+        chart.legend.textColor = Color.GREEN
+    }
+
+    class XAxisValueFormatter(private val values : Array<String>) : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            Log.d(TAG, "getFormattedValue: Index ${value}  -> ${values.elementAt(value.toInt())}")
+            return values[value.toInt()]
+        }
+    }
 }
+
