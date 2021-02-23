@@ -112,11 +112,11 @@ class ConvertActivity : AppCompatActivity() {
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.d("Main", "Before Text Changed")
+                Log.d(TAG, "Before Text Changed")
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.d("Main", "OnTextChanged")
+                Log.d(TAG, "OnTextChanged")
             }
         })
     }
@@ -145,6 +145,7 @@ class ConvertActivity : AppCompatActivity() {
                 convertedToCurrency = listview.getItemAtPosition(myItemInt) as String
                 imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
                 txtCurrencyCodeTo.text = convertedToCurrency
+                Log.d("Before", convertedToCurrency)
                 getRate()
                 getHistoricalRates()
             }
@@ -170,18 +171,22 @@ class ConvertActivity : AppCompatActivity() {
         covertViewModel.getHistoricalRates(getStartDate(),getEndDate(),baseCurrency, convertedToCurrency).observe(this, { data ->
 
             val response = data.rates.toSortedMap()
-            val dates = response.keys
             val listOfRates = arrayListOf<Entry>()
+
             repeat(5){ i ->
                 listOfRates.add(Entry(i.toFloat(), response.values.elementAt(i)[convertedToCurrency]!!.toFloat()))
+            }
+
+            val dates = arrayListOf<String>()
+            repeat(5) { i ->
+                dates.add(response.keys.elementAt(i))
             }
 
             setLineChart(dates, listOfRates)
         })
     }
 
-
-    private fun setLineChart(dates: MutableSet<String>, listOfRates:  ArrayList<Entry>){
+    private fun setLineChart(dates: List<String>, listOfRates:  ArrayList<Entry>){
         val chart: LineChart = findViewById(R.id.chart)
         chart.setDragEnabled(true)
         chart.setScaleEnabled(false)
@@ -199,7 +204,7 @@ class ConvertActivity : AppCompatActivity() {
         dataSets.add(lineDataSet)
 
         val xAxis = chart.xAxis
-        xAxis.valueFormatter = XAxisValueFormatter(dates.toTypedArray())
+        xAxis.valueFormatter = XAxisValueFormatter(dates.toList())
         xAxis.granularity = 1f
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.labelCount = 5
@@ -214,9 +219,11 @@ class ConvertActivity : AppCompatActivity() {
         chart.axisLeft.textColor = ContextCompat.getColor(this,R.color.white)
         // Change Label Text Color
         chart.legend.textColor = Color.GREEN
+        // Make Right Axis 5 labels
+        chart.axisRight.labelCount = 5
     }
 
-    class XAxisValueFormatter(private val values : Array<String>) : ValueFormatter() {
+    class XAxisValueFormatter(private val values: List<String>) : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
             Log.d(TAG, "getFormattedValue: Index ${value}  -> ${values.elementAt(value.toInt())}")
             return values[value.toInt()]
