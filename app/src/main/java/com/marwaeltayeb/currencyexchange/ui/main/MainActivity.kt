@@ -15,8 +15,8 @@ import com.marwaeltayeb.currencyexchange.R
 
 import com.marwaeltayeb.currencyexchange.ui.conversion.ConvertActivity
 import com.marwaeltayeb.currencyexchange.utils.Code
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO
+import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
+import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
 
@@ -39,8 +39,8 @@ class MainActivity : AppCompatActivity() {
 
     private var isSwitched = true
 
-    var baseCurrency = FROM
-    var convertedToCurrency = TO
+    private var baseCurrency = FROM_CURRENCY
+    private var convertedToCurrency = TO_CURRENCY
 
     private lateinit var listview: ListView
 
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         ratesViewModel = ViewModelProvider(this).get(RatesViewModel::class.java)
 
-        loadAllRates(FROM)
+        loadAllRates(FROM_CURRENCY)
         loadDefaultRate()
 
         img_convert.setOnClickListener {

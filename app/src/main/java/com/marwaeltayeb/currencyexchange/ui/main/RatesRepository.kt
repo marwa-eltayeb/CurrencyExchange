@@ -10,11 +10,10 @@ import retrofit2.Response
 
 class RatesRepository {
 
-    private var ratesList: List<Pair<String,Double>> = ArrayList<Pair<String,Double>>()
-    private val mutableLiveData: MutableLiveData<List<Pair<String,Double>>> = MutableLiveData<List<Pair<String,Double>>>()
-    private val mutableLiveDataForRate: MutableLiveData<List<Pair<String,Double>>> = MutableLiveData<List<Pair<String,Double>>>()
+    private val latestRatesLiveData: MutableLiveData<List<Pair<String,Double>>> = MutableLiveData<List<Pair<String,Double>>>()
+    private val exchangeRateLiveData: MutableLiveData<List<Pair<String,Double>>> = MutableLiveData<List<Pair<String,Double>>>()
 
-    fun getMutableLiveData(base: String): MutableLiveData<List<Pair<String,Double>>> {
+    fun getLatestRatesLiveData(base: String): MutableLiveData<List<Pair<String,Double>>> {
         RetrofitClient.getRateService().getLatestRatesByBase(base)
             .enqueue(object : Callback<RateApiResponse> {
                 override fun onFailure(call: Call<RateApiResponse>, t: Throwable) {
@@ -26,16 +25,16 @@ class RatesRepository {
                         Log.v("onResponse", "Succeeded")
 
                         if (response.body() != null) {
-                            ratesList = response.body()!!.rates.toList()
-                            mutableLiveData.setValue(ratesList)
+                            val ratesList: List<Pair<String,Double>> = response.body()!!.rates.toList()
+                            latestRatesLiveData.setValue(ratesList)
                         }
                     }
                 }
             })
-        return mutableLiveData
+        return latestRatesLiveData
     }
 
-    fun getMutableLiveData(base: String, symbol: String): MutableLiveData<List<Pair<String,Double>>> {
+    fun getExchangeRateLiveData(base: String, symbol: String): MutableLiveData<List<Pair<String,Double>>> {
         RetrofitClient.getRateService().getSpecificExchangeRate(base, symbol)
             .enqueue(object : Callback<RateApiResponse> {
                 override fun onFailure(call: Call<RateApiResponse>, t: Throwable) {
@@ -47,11 +46,11 @@ class RatesRepository {
                         Log.v("onResponse", "Succeeded")
 
                         if (response.body() != null) {
-                            mutableLiveDataForRate.setValue(response.body()!!.rates.toList())
+                            exchangeRateLiveData.setValue(response.body()!!.rates.toList())
                         }
                     }
                 }
             })
-        return mutableLiveDataForRate
+        return exchangeRateLiveData
     }
 }

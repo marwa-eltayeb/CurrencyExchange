@@ -11,10 +11,10 @@ import retrofit2.Response
 
 class ConvertRepository {
 
-    private val mutableLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String,Double>>>()
+    private val exchangeRateLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String,Double>>>()
     private val historicalRatesLiveData: MutableLiveData<HistoricApiResponse> = MutableLiveData<HistoricApiResponse>()
 
-    fun getMutableLiveData(base: String, symbol: String): MutableLiveData<List<Pair<String,Double>>> {
+    fun getExchangeRateLiveData(base: String, symbol: String): MutableLiveData<List<Pair<String,Double>>> {
         RetrofitClient.getRateService().getSpecificExchangeRate(base, symbol)
             .enqueue(object : Callback<RateApiResponse> {
                 override fun onFailure(call: Call<RateApiResponse>, t: Throwable) {
@@ -26,15 +26,15 @@ class ConvertRepository {
                         Log.v("onResponse", "Succeeded")
 
                         if (response.body() != null) {
-                            mutableLiveData.setValue(response.body()!!.rates.toList())
+                            exchangeRateLiveData.setValue(response.body()!!.rates.toList())
                         }
                     }
                 }
             })
-        return mutableLiveData
+        return exchangeRateLiveData
     }
 
-    fun getMutableLiveData(startDate: String, endDate: String ,base: String, symbol: String): MutableLiveData<HistoricApiResponse> {
+    fun getHistoricalRatesLiveData(startDate: String, endDate: String ,base: String, symbol: String): MutableLiveData<HistoricApiResponse> {
         RetrofitClient.getRateService().getHistoricalRates(startDate, endDate, base, symbol)
             .enqueue(object : Callback<HistoricApiResponse> {
                 override fun onFailure(call: Call<HistoricApiResponse>, t: Throwable) {

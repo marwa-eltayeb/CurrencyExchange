@@ -20,8 +20,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.utils.Code.Companion.getCurrencyCodes
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO
+import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
+import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getEndDate
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getStartDate
@@ -43,8 +43,8 @@ class ConvertActivity : AppCompatActivity() {
 
     private lateinit var listview: ListView
 
-    var baseCurrency = FROM
-    var convertedToCurrency = TO
+    private var baseCurrency = FROM_CURRENCY
+    private var convertedToCurrency = TO_CURRENCY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
