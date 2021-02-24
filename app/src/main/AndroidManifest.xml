@@ -13,7 +13,8 @@
         android:theme="@style/Theme.CurrencyExchange"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.main.MainActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,6 +24,7 @@
 
         <activity
             android:name=".ui.conversion.ConvertActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".ui.main.MainActivity"
             android:label="@string/converter">
             <meta-data

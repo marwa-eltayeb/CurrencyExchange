@@ -35,8 +35,8 @@ class ConvertActivity : AppCompatActivity() {
     private lateinit var txtCurrencyCodeFrom: TextView
     private lateinit var txtCurrencyRateTo: TextView
     private lateinit var txtCurrencyCodeTo: TextView
-    private lateinit var etFirstConversion: EditText
-    private lateinit var etSecondConversion: EditText
+    private lateinit var edtFirstConversion: EditText
+    private lateinit var edtSecondConversion: EditText
 
     private lateinit var covertViewModel: ConvertViewModel
     private var rate = 0.0
@@ -55,8 +55,8 @@ class ConvertActivity : AppCompatActivity() {
         txtCurrencyCodeFrom = findViewById(R.id.txt_currency_code_from)
         txtCurrencyRateTo = findViewById(R.id.txt_currency_rate_to)
         txtCurrencyCodeTo = findViewById(R.id.txt_currency_code_to)
-        etFirstConversion = findViewById(R.id.et_firstConversion)
-        etSecondConversion = findViewById(R.id.et_secondConversion)
+        edtFirstConversion = findViewById(R.id.edt_firstConversion)
+        edtSecondConversion = findViewById(R.id.edt_secondConversion)
 
         covertViewModel = ViewModelProvider(this).get(ConvertViewModel::class.java)
 
@@ -68,7 +68,7 @@ class ConvertActivity : AppCompatActivity() {
 
         getRate()
 
-        textChanged()
+        setupTextWatcher()
 
         imgCurrencyFlagFrom.setOnClickListener {
             showCustomAlertDialog(true)
@@ -83,26 +83,22 @@ class ConvertActivity : AppCompatActivity() {
 
     private fun getResult() {
         if (baseCurrency == convertedToCurrency) {
-            Toast.makeText(
-                applicationContext,
-                "Please pick a currency to convert",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(this, "Please pick a currency to convert", Toast.LENGTH_SHORT).show()
             txtCurrencyRateTo.text = "???"
         } else {
             getRate()
 
-            val text = ((etFirstConversion.text.toString().toDouble()) * rate).toString()
-            etSecondConversion.setText(text)
+            val text = ((edtFirstConversion.text.toString().toDouble()) * rate).toString()
+            edtSecondConversion.setText(text)
         }
     }
 
-    private fun textChanged() {
-        etFirstConversion.addTextChangedListener(object : TextWatcher {
+    private fun setupTextWatcher() {
+        edtFirstConversion.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (etFirstConversion.text.isBlank()) {
-                    etSecondConversion.setText("")
-                }else{
+                if (edtFirstConversion.text.isBlank()) {
+                    edtSecondConversion.setText("")
+                } else {
                     try {
                         getResult()
                     } catch (e: Exception) {
@@ -127,14 +123,14 @@ class ConvertActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.custom_dialog)
 
         listview = dialog.findViewById(R.id.lst_codes)
-        val adapter: ListAdapter = ArrayAdapter<String>(
+        val codeAdapter: ListAdapter = ArrayAdapter<String>(
             this, android.R.layout.simple_list_item_1, getCurrencyCodes(
                 this
             )
         )
-        listview.setAdapter(adapter)
+        listview.adapter = codeAdapter
 
-        listview.setOnItemClickListener { myAdapter, myView, myItemInt, mylng ->
+        listview.setOnItemClickListener { _, _, myItemInt, _ ->
             if (isFromCurrency) {
                 baseCurrency = listview.getItemAtPosition(myItemInt) as String
                 imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
@@ -167,26 +163,22 @@ class ConvertActivity : AppCompatActivity() {
     }
 
 
-    private fun getHistoricalRates(){
-        covertViewModel.getHistoricalRates(getStartDate(),getEndDate(),baseCurrency, convertedToCurrency).observe(this, { data ->
+    private fun getHistoricalRates() {
+        covertViewModel.getHistoricalRates(getStartDate(), getEndDate(), baseCurrency, convertedToCurrency).observe(this, { data ->
 
             val response = data.rates.toSortedMap()
             val listOfRates = arrayListOf<Entry>()
 
-            repeat(5){ i ->
-                listOfRates.add(Entry(i.toFloat(), response.values.elementAt(i)[convertedToCurrency]!!.toFloat()))
-            }
+            repeat(5) { i -> listOfRates.add(Entry(i.toFloat(), response.values.elementAt(i)[convertedToCurrency]!!.toFloat())) }
 
             val dates = arrayListOf<String>()
-            repeat(5) { i ->
-                dates.add(response.keys.elementAt(i))
-            }
+            repeat(5) { i -> dates.add(response.keys.elementAt(i)) }
 
             setLineChart(dates, listOfRates)
         })
     }
 
-    private fun setLineChart(dates: List<String>, listOfRates:  ArrayList<Entry>){
+    private fun setLineChart(dates: List<String>, listOfRates: ArrayList<Entry>) {
         val chart: LineChart = findViewById(R.id.chart)
         chart.setDragEnabled(true)
         chart.setScaleEnabled(false)
@@ -198,7 +190,7 @@ class ConvertActivity : AppCompatActivity() {
         lineDataSet.valueTextColor = Color.GREEN
         lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
         lineDataSet.setDrawFilled(true)
-        lineDataSet.fillColor = ContextCompat.getColor(this,R.color.colorPrimaryVariant)
+        lineDataSet.fillColor = ContextCompat.getColor(this, R.color.colorPrimaryVariant)
 
         val dataSets = arrayListOf<ILineDataSet>()
         dataSets.add(lineDataSet)
@@ -216,7 +208,7 @@ class ConvertActivity : AppCompatActivity() {
         chart.invalidate()
 
         // Hide Left Axis
-        chart.axisLeft.textColor = ContextCompat.getColor(this,R.color.white)
+        chart.axisLeft.textColor = ContextCompat.getColor(this, R.color.white)
         // Change Label Text Color
         chart.legend.textColor = Color.GREEN
         // Make Right Axis 5 labels

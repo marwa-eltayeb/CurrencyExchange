@@ -85,21 +85,17 @@ class MainActivity : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
 
         ratesAdapter = RatesAdapter()
+        recyclerView.adapter = ratesAdapter
     }
 
     private fun loadAllRates(base: String) {
         ratesViewModel.getAllRates(base).observe(this, {
             ratesAdapter.setRates(it)
+            ratesAdapter.notifyDataSetChanged()
         })
-
-        recyclerView.adapter = ratesAdapter
-        ratesAdapter.notifyDataSetChanged()
     }
 
-    private fun loadDefaultRate() {
-
-        getRate(baseCurrency, convertedToCurrency)
-
+    private fun updateExchangeRateUi(baseCurrency:String, convertedToCurrency: String){
         img_currency_flag_from.setImageResource(getFlag(baseCurrency))
         txt_currency_name_from.text = getCodeName(baseCurrency)
         txt_currency_code_from.text = baseCurrency
@@ -110,6 +106,12 @@ class MainActivity : AppCompatActivity() {
         txt_currency_code_to.text = convertedToCurrency
     }
 
+    private fun loadDefaultRate() {
+        getRate(baseCurrency, convertedToCurrency)
+        
+        updateExchangeRateUi(baseCurrency, convertedToCurrency)
+    }
+
     private fun exchangeRate(){
         if(isSwitched) {
 
@@ -117,14 +119,7 @@ class MainActivity : AppCompatActivity() {
 
             loadAllRates(convertedToCurrency)
 
-            img_currency_flag_from.setImageResource(getFlag(convertedToCurrency))
-            txt_currency_name_from.text = getCodeName(convertedToCurrency)
-            txt_currency_code_from.text = convertedToCurrency
-            txt_currency_rate_from.text = "1"
-
-            img_currency_flag_to.setImageResource(getFlag(baseCurrency))
-            txt_currency_name_to.text = getCodeName(baseCurrency)
-            txt_currency_code_to.text = baseCurrency
+            updateExchangeRateUi(convertedToCurrency, baseCurrency)
 
             isSwitched = false
         }else {
@@ -133,14 +128,7 @@ class MainActivity : AppCompatActivity() {
 
             loadAllRates(baseCurrency)
 
-            img_currency_flag_from.setImageResource(getFlag(baseCurrency))
-            txt_currency_name_from.text = getCodeName(baseCurrency)
-            txt_currency_code_from.text = baseCurrency
-            txt_currency_rate_from.text = "1"
-
-            img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
-            txt_currency_name_to.text = getCodeName(convertedToCurrency)
-            txt_currency_code_to.text = convertedToCurrency
+            updateExchangeRateUi(baseCurrency, convertedToCurrency)
 
             isSwitched = true
         }
@@ -169,29 +157,26 @@ class MainActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.custom_dialog)
 
         listview = dialog.findViewById(R.id.lst_codes)
-        val adapter: ListAdapter = ArrayAdapter<String>(
+        val codeAdapter: ListAdapter = ArrayAdapter<String>(
             this, android.R.layout.simple_list_item_1, Code.getCurrencyCodes(
                 this
             )
         )
-        listview.setAdapter(adapter)
+        listview.adapter = codeAdapter
 
-        listview.setOnItemClickListener { myAdapter, myView, myItemInt, mylng ->
+        listview.setOnItemClickListener { _, _, myItemInt, _ ->
             if (isFromCurrency) {
                 baseCurrency = listview.getItemAtPosition(myItemInt) as String
                 img_currency_flag_from.setImageResource(getFlag(baseCurrency))
                 txt_currency_code_from.text = baseCurrency
                 txt_currency_name_from.text = getCodeName(baseCurrency)
-
-                getRate(baseCurrency, convertedToCurrency)
             } else {
                 convertedToCurrency = listview.getItemAtPosition(myItemInt) as String
                 img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
                 txt_currency_code_to.text = convertedToCurrency
                 txt_currency_name_to.text = getCodeName(convertedToCurrency)
-
-                getRate(baseCurrency, convertedToCurrency)
             }
+            getRate(baseCurrency, convertedToCurrency)
             dialog.cancel()
         }
         dialog.show()
