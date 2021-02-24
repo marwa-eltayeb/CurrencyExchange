@@ -1,11 +1,11 @@
 package com.marwaeltayeb.currencyexchange.ui.main
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.Window
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -14,11 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.marwaeltayeb.currencyexchange.R
 
 import com.marwaeltayeb.currencyexchange.ui.conversion.ConvertActivity
-import com.marwaeltayeb.currencyexchange.utils.Code
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
+import com.marwaeltayeb.currencyexchange.utils.DialogCallback
+import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCustomAlertDialog
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
+
+private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,8 +45,6 @@ class MainActivity : AppCompatActivity() {
     private var baseCurrency = FROM_CURRENCY
     private var convertedToCurrency = TO_CURRENCY
 
-    private lateinit var listview: ListView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,13 +60,8 @@ class MainActivity : AppCompatActivity() {
             exchangeRate()
         }
 
-        img_currency_flag_from.setOnClickListener {
-            showCustomAlertDialog(true)
-        }
-
-        img_currency_flag_to.setOnClickListener {
-            showCustomAlertDialog(false)
-        }
+        img_currency_flag_from.setOnClickListener(onImgFlagFromListener)
+        img_currency_flag_to.setOnClickListener(onImgFlagToListener)
     }
 
     private fun initViews(){
@@ -151,43 +147,41 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showCustomAlertDialog(isFromCurrency: Boolean) {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.custom_dialog)
-
-        listview = dialog.findViewById(R.id.lst_codes)
-        val codeAdapter: ListAdapter = ArrayAdapter<String>(
-            this, android.R.layout.simple_list_item_1, Code.getCurrencyCodes(
-                this
-            )
-        )
-        listview.adapter = codeAdapter
-
-        listview.setOnItemClickListener { _, _, myItemInt, _ ->
-            if (isFromCurrency) {
-                baseCurrency = listview.getItemAtPosition(myItemInt) as String
-                img_currency_flag_from.setImageResource(getFlag(baseCurrency))
-                txt_currency_code_from.text = baseCurrency
-                txt_currency_name_from.text = getCodeName(baseCurrency)
-            } else {
-                convertedToCurrency = listview.getItemAtPosition(myItemInt) as String
-                img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
-                txt_currency_code_to.text = convertedToCurrency
-                txt_currency_name_to.text = getCodeName(convertedToCurrency)
-            }
-            getRate(baseCurrency, convertedToCurrency)
-            dialog.cancel()
-        }
-        dialog.show()
-    }
-
     private fun getRate(from:String, to:String) {
         if (from == to) {
             txt_currency_rate_to.text = "???"
         } else {
             ratesViewModel.getSpecificExchangeRate(from, to).observe(this, {
+                Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
                 txt_currency_rate_to.text = String.format("%.4f", it.get(0).second)
+            })
+        }
+    }
+
+    private val onImgFlagFromListener = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            showCustomAlertDialog(this@MainActivity,object: DialogCallback{
+                override fun onCallback(listView: ListView, item: Int) {
+                    baseCurrency = listView.getItemAtPosition(item) as String
+                    img_currency_flag_from.setImageResource(getFlag(baseCurrency))
+                    txt_currency_code_from.text = baseCurrency
+                    txt_currency_name_from.text = getCodeName(baseCurrency)
+                    getRate(baseCurrency, convertedToCurrency)
+                }
+            })
+        }
+    }
+
+    private val onImgFlagToListener = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            showCustomAlertDialog(this@MainActivity,object: DialogCallback{
+                override fun onCallback(listView: ListView, item: Int) {
+                    convertedToCurrency = listView.getItemAtPosition(item) as String
+                    img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
+                    txt_currency_code_to.text = convertedToCurrency
+                    txt_currency_name_to.text = getCodeName(convertedToCurrency)
+                    getRate(baseCurrency, convertedToCurrency)
+                }
             })
         }
     }

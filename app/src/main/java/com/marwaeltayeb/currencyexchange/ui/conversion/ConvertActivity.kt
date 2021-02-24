@@ -1,12 +1,11 @@
 package com.marwaeltayeb.currencyexchange.ui.conversion
 
-import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Window
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,12 +18,13 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.marwaeltayeb.currencyexchange.R
-import com.marwaeltayeb.currencyexchange.utils.Code.Companion.getCurrencyCodes
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getEndDate
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getStartDate
+import com.marwaeltayeb.currencyexchange.utils.DialogCallback
+import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCustomAlertDialog
 
 private const val TAG = "ConvertActivity"
 
@@ -40,8 +40,6 @@ class ConvertActivity : AppCompatActivity() {
 
     private lateinit var covertViewModel: ConvertViewModel
     private var rate = 0.0
-
-    private lateinit var listview: ListView
 
     private var baseCurrency = FROM_CURRENCY
     private var convertedToCurrency = TO_CURRENCY
@@ -70,15 +68,10 @@ class ConvertActivity : AppCompatActivity() {
 
         setupTextWatcher()
 
-        imgCurrencyFlagFrom.setOnClickListener {
-            showCustomAlertDialog(true)
-        }
-
-        imgCurrencyFlagTo.setOnClickListener {
-            showCustomAlertDialog(false)
-        }
-
         getHistoricalRates()
+
+        imgCurrencyFlagFrom.setOnClickListener(imgCurrencyFlagFromListener)
+        imgCurrencyFlagTo.setOnClickListener(imgCurrencyFlagToListener)
     }
 
     private fun getResult() {
@@ -117,55 +110,20 @@ class ConvertActivity : AppCompatActivity() {
         })
     }
 
-    private fun showCustomAlertDialog(isFromCurrency: Boolean) {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.custom_dialog)
-
-        listview = dialog.findViewById(R.id.lst_codes)
-        val codeAdapter: ListAdapter = ArrayAdapter<String>(
-            this, android.R.layout.simple_list_item_1, getCurrencyCodes(
-                this
-            )
-        )
-        listview.adapter = codeAdapter
-
-        listview.setOnItemClickListener { _, _, myItemInt, _ ->
-            if (isFromCurrency) {
-                baseCurrency = listview.getItemAtPosition(myItemInt) as String
-                imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
-                txtCurrencyCodeFrom.text = baseCurrency
-                getRate()
-                getHistoricalRates()
-            } else {
-                convertedToCurrency = listview.getItemAtPosition(myItemInt) as String
-                imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
-                txtCurrencyCodeTo.text = convertedToCurrency
-                Log.d("Before", convertedToCurrency)
-                getRate()
-                getHistoricalRates()
-            }
-            dialog.cancel()
-        }
-        dialog.show()
-    }
-
-
     private fun getRate() {
         if (baseCurrency == convertedToCurrency) {
             txtCurrencyRateTo.text = "???"
         } else {
             covertViewModel.exchangeRate(baseCurrency, convertedToCurrency).observe(this, {
+                Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
                 rate = it.get(0).second
                 txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
             })
         }
     }
 
-
     private fun getHistoricalRates() {
         covertViewModel.getHistoricalRates(getStartDate(), getEndDate(), baseCurrency, convertedToCurrency).observe(this, { data ->
-
             val response = data.rates.toSortedMap()
             val listOfRates = arrayListOf<Entry>()
 
@@ -219,6 +177,35 @@ class ConvertActivity : AppCompatActivity() {
         override fun getFormattedValue(value: Float): String {
             Log.d(TAG, "getFormattedValue: Index ${value}  -> ${values.elementAt(value.toInt())}")
             return values[value.toInt()]
+        }
+    }
+
+    private val imgCurrencyFlagFromListener = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
+                override fun onCallback(listView: ListView, item: Int) {
+                    baseCurrency = listView.getItemAtPosition(item) as String
+                    imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
+                    txtCurrencyCodeFrom.text = baseCurrency
+                    getRate()
+                    getHistoricalRates()
+                }
+            })
+        }
+    }
+
+    private val imgCurrencyFlagToListener = object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
+                override fun onCallback(listView: ListView, item: Int) {
+                    convertedToCurrency = listView.getItemAtPosition(item) as String
+                    Log.d("sad", convertedToCurrency)
+                    imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+                    txtCurrencyCodeTo.text = convertedToCurrency
+                    getRate()
+                    getHistoricalRates()
+                }
+            })
         }
     }
 }
