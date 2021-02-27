@@ -54,7 +54,7 @@
             android:layout_height="@dimen/main_currencyCode_height"
             android:gravity="start|bottom"
             android:padding="10dp"
-            android:text="US Dollar"
+            tools:text="US Dollar"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_currencyCode_textSize"
             android:textStyle="bold" />
@@ -65,7 +65,7 @@
             android:layout_height="@dimen/main_currencyCode_height"
             android:gravity="end"
             android:padding="10dp"
-            android:text="Euro"
+            tools:text="Euro"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_currencyCode_textSize"
             android:textStyle="bold" />
@@ -96,7 +96,7 @@
             android:layout_weight=".8"
             android:gravity="start|bottom"
             android:padding="@dimen/main_currencyCode_padding"
-            android:text="USD"
+            tools:text="USD"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_textSize"
             android:textStyle="bold" />
@@ -132,7 +132,7 @@
             android:gravity="end"
             android:paddingStart="@dimen/main_currencyCode_padding"
             android:paddingEnd="@dimen/main_currencyCode_padding"
-            android:text="EUR"
+            tools:text="EUR"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_textSize"
             android:textStyle="bold" />

@@ -56,7 +56,7 @@
     </LinearLayout>
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
+        android:id="@+id/lineChart"
         android:layout_gravity="center"
         android:layout_marginTop="1dp"
         android:layout_width="340dp"

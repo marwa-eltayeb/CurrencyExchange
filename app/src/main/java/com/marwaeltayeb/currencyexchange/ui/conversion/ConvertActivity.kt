@@ -18,6 +18,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.marwaeltayeb.currencyexchange.R
+import com.marwaeltayeb.currencyexchange.databinding.ActivityConvertBinding
+import com.marwaeltayeb.currencyexchange.databinding.ActivityMainBinding
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
@@ -30,13 +32,7 @@ private const val TAG = "ConvertActivity"
 
 class ConvertActivity : AppCompatActivity() {
 
-    private lateinit var imgCurrencyFlagFrom: ImageView
-    private lateinit var imgCurrencyFlagTo: ImageView
-    private lateinit var txtCurrencyCodeFrom: TextView
-    private lateinit var txtCurrencyRateTo: TextView
-    private lateinit var txtCurrencyCodeTo: TextView
-    private lateinit var edtFirstConversion: EditText
-    private lateinit var edtSecondConversion: EditText
+    private lateinit var binding: ActivityConvertBinding
 
     private lateinit var covertViewModel: ConvertViewModel
     private var rate = 0.0
@@ -46,23 +42,16 @@ class ConvertActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_convert)
-
-        imgCurrencyFlagFrom = findViewById(R.id.img_currency_flag_from)
-        imgCurrencyFlagTo = findViewById(R.id.img_currency_flag_to)
-        txtCurrencyCodeFrom = findViewById(R.id.txt_currency_code_from)
-        txtCurrencyRateTo = findViewById(R.id.txt_currency_rate_to)
-        txtCurrencyCodeTo = findViewById(R.id.txt_currency_code_to)
-        edtFirstConversion = findViewById(R.id.edt_firstConversion)
-        edtSecondConversion = findViewById(R.id.edt_secondConversion)
+        binding = ActivityConvertBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         covertViewModel = ViewModelProvider(this).get(ConvertViewModel::class.java)
 
-        txtCurrencyCodeFrom.text = baseCurrency
-        imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
+        binding.txtCurrencyCodeFrom.text = baseCurrency
+        binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
 
-        txtCurrencyCodeTo.text = convertedToCurrency
-        imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+        binding.txtCurrencyCodeTo.text = convertedToCurrency
+        binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
 
         setUpObservers()
 
@@ -72,15 +61,15 @@ class ConvertActivity : AppCompatActivity() {
 
         getHistoricalRates()
 
-        imgCurrencyFlagFrom.setOnClickListener(imgCurrencyFlagFromListener)
-        imgCurrencyFlagTo.setOnClickListener(imgCurrencyFlagToListener)
+        binding.imgCurrencyFlagFrom.setOnClickListener(imgCurrencyFlagFromListener)
+        binding.imgCurrencyFlagTo.setOnClickListener(imgCurrencyFlagToListener)
     }
 
     private fun setUpObservers() {
         covertViewModel.getExchangeRate().observe(this, {
             Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
             rate = it.get(0).second
-            txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
+            binding.txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
         })
 
         covertViewModel.getHistoricalRates().observe(this, { data ->
@@ -103,10 +92,10 @@ class ConvertActivity : AppCompatActivity() {
     }
 
     private fun setupTextWatcher() {
-        edtFirstConversion.addTextChangedListener(object : TextWatcher {
+        binding.edtFirstConversion.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (edtFirstConversion.text.isBlank()) {
-                    edtSecondConversion.setText("")
+                if (binding.edtFirstConversion.text.isBlank()) {
+                    binding.edtSecondConversion.setText("")
                 } else {
                     try {
                         getResult()
@@ -129,18 +118,18 @@ class ConvertActivity : AppCompatActivity() {
     private fun getResult() {
         if (baseCurrency == convertedToCurrency) {
             Toast.makeText(this, "Please pick a currency to convert", Toast.LENGTH_SHORT).show()
-            txtCurrencyRateTo.text = "???"
+            binding.txtCurrencyRateTo.text = "???"
         } else {
             getRate()
 
-            val text = ((edtFirstConversion.text.toString().toDouble()) * rate).toString()
-            edtSecondConversion.setText(text)
+            val text = ((binding.edtFirstConversion.text.toString().toDouble()) * rate).toString()
+            binding.edtSecondConversion.setText(text)
         }
     }
 
     private fun getRate() {
         if (baseCurrency == convertedToCurrency) {
-            txtCurrencyRateTo.text = "???"
+            binding.txtCurrencyRateTo.text = "???"
         } else {
             covertViewModel.requestExchangeRate(baseCurrency, convertedToCurrency)
         }
@@ -151,9 +140,8 @@ class ConvertActivity : AppCompatActivity() {
     }
 
     private fun setLineChart(dates: List<String>, listOfRates: ArrayList<Entry>) {
-        val chart: LineChart = findViewById(R.id.chart)
-        chart.setDragEnabled(true)
-        chart.setScaleEnabled(false)
+        binding.lineChart.setDragEnabled(true)
+        binding.lineChart.setScaleEnabled(false)
 
         val lineDataSet = LineDataSet(listOfRates, getString(R.string.currency_rates))
         lineDataSet.fillAlpha = 110
@@ -167,7 +155,7 @@ class ConvertActivity : AppCompatActivity() {
         val dataSets = arrayListOf<ILineDataSet>()
         dataSets.add(lineDataSet)
 
-        val xAxis = chart.xAxis
+        val xAxis = binding.lineChart.xAxis
         xAxis.valueFormatter = XAxisValueFormatter(dates.toList())
         xAxis.granularity = 1f
         xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -176,15 +164,15 @@ class ConvertActivity : AppCompatActivity() {
 
         val lineData = LineData(dataSets)
         lineData.setDrawValues(true)
-        chart.data = lineData
-        chart.invalidate()
+        binding.lineChart.data = lineData
+        binding.lineChart.invalidate()
 
         // Hide Left Axis
-        chart.axisLeft.textColor = ContextCompat.getColor(this, R.color.white)
+        binding.lineChart.axisLeft.textColor = ContextCompat.getColor(this, R.color.white)
         // Change Label Text Color
-        chart.legend.textColor = Color.GREEN
+        binding.lineChart.legend.textColor = Color.GREEN
         // Make Right Axis 5 labels
-        chart.axisRight.labelCount = 5
+        binding.lineChart.axisRight.labelCount = 5
     }
 
     class XAxisValueFormatter(private val values: List<String>) : ValueFormatter() {
@@ -199,8 +187,8 @@ class ConvertActivity : AppCompatActivity() {
             showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
                 override fun onCallback(listView: ListView, item: Int) {
                     baseCurrency = listView.getItemAtPosition(item) as String
-                    imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
-                    txtCurrencyCodeFrom.text = baseCurrency
+                    binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
+                    binding.txtCurrencyCodeFrom.text = baseCurrency
                     getRate()
                     getHistoricalRates()
                 }
@@ -214,8 +202,8 @@ class ConvertActivity : AppCompatActivity() {
                 override fun onCallback(listView: ListView, item: Int) {
                     convertedToCurrency = listView.getItemAtPosition(item) as String
                     Log.d("sad", convertedToCurrency)
-                    imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
-                    txtCurrencyCodeTo.text = convertedToCurrency
+                    binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+                    binding.txtCurrencyCodeTo.text = convertedToCurrency
                     getRate()
                     getHistoricalRates()
                 }

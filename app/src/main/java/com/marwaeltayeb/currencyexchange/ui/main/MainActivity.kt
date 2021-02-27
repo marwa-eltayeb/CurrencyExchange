@@ -10,8 +10,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.marwaeltayeb.currencyexchange.R
+import com.marwaeltayeb.currencyexchange.databinding.ActivityMainBinding
 
 import com.marwaeltayeb.currencyexchange.ui.conversion.ConvertActivity
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
@@ -25,18 +25,8 @@ private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var img_currency_flag_from: ImageView
-    private lateinit var img_convert: ImageView
-    private lateinit var img_currency_flag_to: ImageView
-    private lateinit var txt_currency_name_from: TextView
-    private lateinit var txt_currency_name_to: TextView
+    private lateinit var binding: ActivityMainBinding
 
-    private lateinit var txt_currency_rate_from: TextView
-    private lateinit var txt_currency_code_from: TextView
-    private lateinit var txt_currency_rate_to: TextView
-    private lateinit var txt_currency_code_to: TextView
-
-    private lateinit var recyclerView: RecyclerView
     private lateinit var ratesAdapter: RatesAdapter
     private lateinit var ratesViewModel:RatesViewModel
 
@@ -47,7 +37,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initViews()
 
@@ -59,12 +50,12 @@ class MainActivity : AppCompatActivity() {
 
         loadDefaultRate()
 
-        img_convert.setOnClickListener {
+        binding.imgConvert.setOnClickListener {
             exchangeRate()
         }
 
-        img_currency_flag_from.setOnClickListener(onImgFlagFromListener)
-        img_currency_flag_to.setOnClickListener(onImgFlagToListener)
+        binding.imgCurrencyFlagFrom.setOnClickListener(onImgFlagFromListener)
+        binding.imgCurrencyFlagTo.setOnClickListener(onImgFlagToListener)
     }
 
     private fun setUpObservers() {
@@ -75,28 +66,17 @@ class MainActivity : AppCompatActivity() {
 
         ratesViewModel.getExchangeRate().observe(this, {
             Log.d("HI", "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
-            txt_currency_rate_to.text = String.format("%.4f", it.get(0).second)
+            binding.txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
         })
     }
 
     private fun initViews(){
-        img_currency_flag_from = findViewById(R.id.img_currency_flag_from)
-        img_convert = findViewById(R.id.img_convert)
-        img_currency_flag_to = findViewById(R.id.img_currency_flag_to)
-        txt_currency_name_from = findViewById(R.id.txt_currency_name_from)
-        txt_currency_name_to = findViewById(R.id.txt_currency_name_to)
-        txt_currency_rate_from = findViewById(R.id.txt_currency_rate_from)
-        txt_currency_code_from = findViewById(R.id.txt_currency_code_from)
-        txt_currency_rate_to = findViewById(R.id.txt_currency_rate_to)
-        txt_currency_code_to = findViewById(R.id.txt_currency_code_to)
-
-        recyclerView = findViewById(R.id.rc_rates_list)
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = linearLayoutManager
-        recyclerView.setHasFixedSize(true)
+        binding.rcRatesList.layoutManager = linearLayoutManager
+        binding.rcRatesList.setHasFixedSize(true)
 
         ratesAdapter = RatesAdapter()
-        recyclerView.adapter = ratesAdapter
+        binding.rcRatesList.adapter = ratesAdapter
     }
 
     private fun loadAllRates(base: String) {
@@ -104,14 +84,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateExchangeRateUi(baseCurrency:String, convertedToCurrency: String){
-        img_currency_flag_from.setImageResource(getFlag(baseCurrency))
-        txt_currency_name_from.text = getCodeName(baseCurrency)
-        txt_currency_code_from.text = baseCurrency
-        txt_currency_rate_from.text = "1"
+        binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
+        binding.txtCurrencyNameFrom.text = getCodeName(baseCurrency)
+        binding.txtCurrencyCodeFrom.text = baseCurrency
+        binding.txtCurrencyRateFrom.text = "1"
 
-        img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
-        txt_currency_name_to.text = getCodeName(convertedToCurrency)
-        txt_currency_code_to.text = convertedToCurrency
+        binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+        binding.txtCurrencyNameTo.text = getCodeName(convertedToCurrency)
+        binding.txtCurrencyCodeTo.text = convertedToCurrency
     }
 
     private fun loadDefaultRate() {
@@ -161,7 +141,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getRate(from:String, to:String) {
         if (from == to) {
-            txt_currency_rate_to.text = "???"
+            binding.txtCurrencyRateTo.text = "???"
         } else {
             ratesViewModel.requestExchangeRate(from, to)
         }
@@ -172,9 +152,9 @@ class MainActivity : AppCompatActivity() {
             showCustomAlertDialog(this@MainActivity,object: DialogCallback{
                 override fun onCallback(listView: ListView, item: Int) {
                     baseCurrency = listView.getItemAtPosition(item) as String
-                    img_currency_flag_from.setImageResource(getFlag(baseCurrency))
-                    txt_currency_code_from.text = baseCurrency
-                    txt_currency_name_from.text = getCodeName(baseCurrency)
+                    binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
+                    binding.txtCurrencyCodeFrom.text = baseCurrency
+                    binding.txtCurrencyNameFrom.text = getCodeName(baseCurrency)
                     getRate(baseCurrency, convertedToCurrency)
                 }
             })
@@ -186,9 +166,9 @@ class MainActivity : AppCompatActivity() {
             showCustomAlertDialog(this@MainActivity,object: DialogCallback{
                 override fun onCallback(listView: ListView, item: Int) {
                     convertedToCurrency = listView.getItemAtPosition(item) as String
-                    img_currency_flag_to.setImageResource(getFlag(convertedToCurrency))
-                    txt_currency_code_to.text = convertedToCurrency
-                    txt_currency_name_to.text = getCodeName(convertedToCurrency)
+                    binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+                    binding.txtCurrencyCodeTo.text = convertedToCurrency
+                    binding.txtCurrencyNameTo.text = getCodeName(convertedToCurrency)
                     getRate(baseCurrency, convertedToCurrency)
                 }
             })
