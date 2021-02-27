@@ -8,12 +8,20 @@ class ConvertViewModel : ViewModel() {
 
     private var convertRepository: ConvertRepository? = ConvertRepository()
 
-    fun exchangeRate(base: String, symbol: String): LiveData<List<Pair<String, Double>>> {
-        return convertRepository!!.getExchangeRateLiveData(base, symbol)
+    fun requestExchangeRate(base: String, symbol: String) {
+        return convertRepository!!.requestExchangeRateLiveData(base, symbol)
     }
 
-    fun getHistoricalRates(startDate: String, endDate: String ,base: String, symbol: String): LiveData<HistoricApiResponse> {
-        return convertRepository!!.getHistoricalRatesLiveData(startDate, endDate,base, symbol)
+    fun getExchangeRate(): LiveData<List<Pair<String, Double>>>{
+        return convertRepository!!.getExchangeRateLiveData()
+    }
+
+    fun requestHistoricalRates(startDate: String, endDate: String ,base: String, symbol: String){
+        convertRepository!!.requestHistoricalRates(startDate, endDate,base, symbol)
+    }
+
+    fun getHistoricalRates(): LiveData<HistoricApiResponse>{
+        return convertRepository!!.getHistoricalRatesLiveData()
     }
 }
 

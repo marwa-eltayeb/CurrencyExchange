@@ -14,7 +14,7 @@ class ConvertRepository {
     private val exchangeRateLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String,Double>>>()
     private val historicalRatesLiveData: MutableLiveData<HistoricApiResponse> = MutableLiveData<HistoricApiResponse>()
 
-    fun getExchangeRateLiveData(base: String, symbol: String): MutableLiveData<List<Pair<String,Double>>> {
+    fun requestExchangeRateLiveData(base: String, symbol: String){
         RetrofitClient.getRateService().getSpecificExchangeRate(base, symbol)
             .enqueue(object : Callback<RateApiResponse> {
                 override fun onFailure(call: Call<RateApiResponse>, t: Throwable) {
@@ -31,10 +31,13 @@ class ConvertRepository {
                     }
                 }
             })
+    }
+
+    fun getExchangeRateLiveData(): MutableLiveData<List<Pair<String,Double>>>{
         return exchangeRateLiveData
     }
 
-    fun getHistoricalRatesLiveData(startDate: String, endDate: String ,base: String, symbol: String): MutableLiveData<HistoricApiResponse> {
+    fun requestHistoricalRates(startDate: String, endDate: String ,base: String, symbol: String) {
         RetrofitClient.getRateService().getHistoricalRates(startDate, endDate, base, symbol)
             .enqueue(object : Callback<HistoricApiResponse> {
                 override fun onFailure(call: Call<HistoricApiResponse>, t: Throwable) {
@@ -51,6 +54,9 @@ class ConvertRepository {
                     }
                 }
             })
+    }
+
+    fun getHistoricalRatesLiveData():MutableLiveData<HistoricApiResponse> {
         return historicalRatesLiveData
     }
 }

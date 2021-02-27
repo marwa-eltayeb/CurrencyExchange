@@ -64,6 +64,8 @@ class ConvertActivity : AppCompatActivity() {
         txtCurrencyCodeTo.text = convertedToCurrency
         imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
 
+        setUpObservers()
+
         getRate()
 
         setupTextWatcher()
@@ -74,16 +76,30 @@ class ConvertActivity : AppCompatActivity() {
         imgCurrencyFlagTo.setOnClickListener(imgCurrencyFlagToListener)
     }
 
-    private fun getResult() {
-        if (baseCurrency == convertedToCurrency) {
-            Toast.makeText(this, "Please pick a currency to convert", Toast.LENGTH_SHORT).show()
-            txtCurrencyRateTo.text = "???"
-        } else {
-            getRate()
+    private fun setUpObservers() {
+        covertViewModel.getExchangeRate().observe(this, {
+            Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
+            rate = it.get(0).second
+            txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
+        })
 
-            val text = ((edtFirstConversion.text.toString().toDouble()) * rate).toString()
-            edtSecondConversion.setText(text)
-        }
+        covertViewModel.getHistoricalRates().observe(this, { data ->
+            val response = data.rates.toSortedMap()
+            Log.d(TAG, "getHistoricalRates: {${convertedToCurrency}} + ${response.values} ? ")
+
+            val listOfRates = arrayListOf<Entry>()
+
+            repeat(5){ i ->
+                listOfRates.add(Entry(i.toFloat(), response.values.elementAt(i)[convertedToCurrency]!!.toFloat()))
+            }
+
+            val dates = arrayListOf<String>()
+            repeat(5) { i ->
+                dates.add(response.keys.elementAt(i))
+            }
+
+            setLineChart(dates, listOfRates)
+        })
     }
 
     private fun setupTextWatcher() {
@@ -110,30 +126,28 @@ class ConvertActivity : AppCompatActivity() {
         })
     }
 
+    private fun getResult() {
+        if (baseCurrency == convertedToCurrency) {
+            Toast.makeText(this, "Please pick a currency to convert", Toast.LENGTH_SHORT).show()
+            txtCurrencyRateTo.text = "???"
+        } else {
+            getRate()
+
+            val text = ((edtFirstConversion.text.toString().toDouble()) * rate).toString()
+            edtSecondConversion.setText(text)
+        }
+    }
+
     private fun getRate() {
         if (baseCurrency == convertedToCurrency) {
             txtCurrencyRateTo.text = "???"
         } else {
-            covertViewModel.exchangeRate(baseCurrency, convertedToCurrency).observe(this, {
-                Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
-                rate = it.get(0).second
-                txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
-            })
+            covertViewModel.requestExchangeRate(baseCurrency, convertedToCurrency)
         }
     }
 
     private fun getHistoricalRates() {
-        covertViewModel.getHistoricalRates(getStartDate(), getEndDate(), baseCurrency, convertedToCurrency).observe(this, { data ->
-            val response = data.rates.toSortedMap()
-            val listOfRates = arrayListOf<Entry>()
-
-            repeat(5) { i -> listOfRates.add(Entry(i.toFloat(), response.values.elementAt(i)[convertedToCurrency]!!.toFloat())) }
-
-            val dates = arrayListOf<String>()
-            repeat(5) { i -> dates.add(response.keys.elementAt(i)) }
-
-            setLineChart(dates, listOfRates)
-        })
+        covertViewModel.requestHistoricalRates(getStartDate(),getEndDate(),baseCurrency, convertedToCurrency)
     }
 
     private fun setLineChart(dates: List<String>, listOfRates: ArrayList<Entry>) {

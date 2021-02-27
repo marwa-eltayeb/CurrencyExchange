@@ -53,7 +53,10 @@ class MainActivity : AppCompatActivity() {
 
         ratesViewModel = ViewModelProvider(this).get(RatesViewModel::class.java)
 
+        setUpObservers()
+
         loadAllRates(FROM_CURRENCY)
+
         loadDefaultRate()
 
         img_convert.setOnClickListener {
@@ -62,6 +65,18 @@ class MainActivity : AppCompatActivity() {
 
         img_currency_flag_from.setOnClickListener(onImgFlagFromListener)
         img_currency_flag_to.setOnClickListener(onImgFlagToListener)
+    }
+
+    private fun setUpObservers() {
+        ratesViewModel.getLatestRates().observe(this, {
+            ratesAdapter.setRates(it)
+            ratesAdapter.notifyDataSetChanged()
+        })
+
+        ratesViewModel.getExchangeRate().observe(this, {
+            Log.d("HI", "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
+            txt_currency_rate_to.text = String.format("%.4f", it.get(0).second)
+        })
     }
 
     private fun initViews(){
@@ -85,10 +100,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAllRates(base: String) {
-        ratesViewModel.getAllRates(base).observe(this, {
-            ratesAdapter.setRates(it)
-            ratesAdapter.notifyDataSetChanged()
-        })
+        ratesViewModel.requestLatestRates(base)
     }
 
     private fun updateExchangeRateUi(baseCurrency:String, convertedToCurrency: String){
@@ -151,10 +163,7 @@ class MainActivity : AppCompatActivity() {
         if (from == to) {
             txt_currency_rate_to.text = "???"
         } else {
-            ratesViewModel.getSpecificExchangeRate(from, to).observe(this, {
-                Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
-                txt_currency_rate_to.text = String.format("%.4f", it.get(0).second)
-            })
+            ratesViewModel.requestExchangeRate(from, to)
         }
     }
 
