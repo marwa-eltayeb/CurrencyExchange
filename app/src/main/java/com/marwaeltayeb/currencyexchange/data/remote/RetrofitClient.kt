@@ -2,6 +2,7 @@ package com.marwaeltayeb.currencyexchange.data.remote
 
 import com.marwaeltayeb.currencyexchange.utils.Const
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object  RetrofitClient {
@@ -12,6 +13,7 @@ object  RetrofitClient {
         retrofit = Retrofit.Builder()
             .baseUrl(Const.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
 

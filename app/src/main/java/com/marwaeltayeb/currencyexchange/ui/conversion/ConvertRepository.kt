@@ -5,32 +5,30 @@ import androidx.lifecycle.MutableLiveData
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
 import com.marwaeltayeb.currencyexchange.data.remote.RetrofitClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+
+private const val TAG = "ConvertRepository"
 
 class ConvertRepository {
 
     private val exchangeRateLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String,Double>>>()
     private val historicalRatesLiveData: MutableLiveData<HistoricApiResponse> = MutableLiveData<HistoricApiResponse>()
 
+    var compositeDisposable = CompositeDisposable()
+
     fun requestExchangeRateLiveData(base: String, symbol: String){
-        RetrofitClient.getRateService().getSpecificExchangeRate(base, symbol)
-            .enqueue(object : Callback<RateApiResponse> {
-                override fun onFailure(call: Call<RateApiResponse>, t: Throwable) {
-                    Log.d("onFailure", t.message.toString())
-                }
 
-                override fun onResponse(call: Call<RateApiResponse>, response: Response<RateApiResponse>) {
-                    if (response.isSuccessful) {
-                        Log.v("onResponse", "Succeeded")
+        val observable =
+            RetrofitClient.getRateService().getSpecificExchangeRate(base, symbol)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ o: RateApiResponse? ->
+                    Log.d(TAG, "Succeeded")
+                    exchangeRateLiveData.setValue(o?.rates?.toList()) }, { e: Throwable -> Log.d(TAG, "onFailure: ${e.message.toString()}") })
 
-                        if (response.body() != null) {
-                            exchangeRateLiveData.setValue(response.body()!!.rates.toList())
-                        }
-                    }
-                }
-            })
+        compositeDisposable.add(observable)
     }
 
     fun getExchangeRateLiveData(): MutableLiveData<List<Pair<String,Double>>>{
@@ -38,25 +36,23 @@ class ConvertRepository {
     }
 
     fun requestHistoricalRates(startDate: String, endDate: String ,base: String, symbol: String) {
-        RetrofitClient.getRateService().getHistoricalRates(startDate, endDate, base, symbol)
-            .enqueue(object : Callback<HistoricApiResponse> {
-                override fun onFailure(call: Call<HistoricApiResponse>, t: Throwable) {
-                    Log.d("onFailure", t.message.toString())
-                }
 
-                override fun onResponse(call: Call<HistoricApiResponse>, response: Response<HistoricApiResponse>) {
-                    if (response.isSuccessful) {
-                        Log.v("onResponse", "Succeeded")
+        val observable =
+            RetrofitClient.getRateService().getHistoricalRates(startDate, endDate, base, symbol)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ o: HistoricApiResponse? ->
+                    Log.d(TAG, "Succeeded")
+                    historicalRatesLiveData.setValue(o) }, { e: Throwable -> Log.d(TAG, "onFailure: ${e.message.toString()}") })
 
-                        if (response.body() != null) {
-                            historicalRatesLiveData.setValue(response.body())
-                        }
-                    }
-                }
-            })
+        compositeDisposable.add(observable)
     }
 
     fun getHistoricalRatesLiveData():MutableLiveData<HistoricApiResponse> {
         return historicalRatesLiveData
+    }
+
+    fun clearCompositeDisposable(){
+        compositeDisposable.clear()
     }
 }

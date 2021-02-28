@@ -5,22 +5,27 @@ import androidx.lifecycle.ViewModel
 
 class RatesViewModel : ViewModel() {
 
-    private var ratesRepository: RatesRepository? = RatesRepository()
+    private var ratesRepository: RatesRepository = RatesRepository()
 
     fun requestLatestRates(base: String) {
-        return ratesRepository!!.requestLatestRatesLiveData(base)
+        return ratesRepository.requestLatestRatesLiveData(base)
     }
 
     fun getLatestRates(): LiveData<List<Pair<String, Double>>>{
-        return ratesRepository!!.getLatestRatesLiveData()
+        return ratesRepository.getLatestRatesLiveData()
     }
 
     fun requestExchangeRate(base: String, symbol: String) {
-        return ratesRepository!!.requestExchangeRateLiveData(base, symbol)
+        return ratesRepository.requestExchangeRateLiveData(base, symbol)
     }
 
     fun getExchangeRate(): LiveData<List<Pair<String, Double>>>{
-        return ratesRepository!!.getExchangeRateLiveData()
+        return ratesRepository.getExchangeRateLiveData()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        ratesRepository.clearCompositeDisposable()
     }
 }
 
