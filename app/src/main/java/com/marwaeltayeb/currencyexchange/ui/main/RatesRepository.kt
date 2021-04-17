@@ -3,14 +3,16 @@ package com.marwaeltayeb.currencyexchange.ui.main
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
+import com.marwaeltayeb.currencyexchange.data.remote.RatesService
 import com.marwaeltayeb.currencyexchange.data.remote.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 private const val TAG = "RatesRepository"
 
-class RatesRepository {
+class RatesRepository @Inject constructor(private val ratesService: RatesService) {
 
     private val latestRatesLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String, Double>>>()
     private val exchangeRateLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String, Double>>>()
@@ -20,7 +22,7 @@ class RatesRepository {
     fun requestLatestRatesLiveData(base: String) {
 
         val observable =
-            RetrofitClient.getRateService().getLatestRatesByBase(base)
+            ratesService.getLatestRatesByBase(base)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ o: RateApiResponse? ->
@@ -37,7 +39,7 @@ class RatesRepository {
     fun requestExchangeRateLiveData(base: String, symbol: String) {
 
         val observable =
-            RetrofitClient.getRateService().getSpecificExchangeRate(base, symbol)
+            ratesService.getSpecificExchangeRate(base, symbol)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ o: RateApiResponse? ->

@@ -3,10 +3,9 @@ package com.marwaeltayeb.currencyexchange.ui.conversion
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
+import javax.inject.Inject
 
-class ConvertViewModel : ViewModel() {
-
-    private var convertRepository: ConvertRepository = ConvertRepository()
+class ConvertViewModel@Inject constructor(private val convertRepository: ConvertRepository) : ViewModel() {
 
     fun requestExchangeRate(base: String, symbol: String) {
         return convertRepository.requestExchangeRateLiveData(base, symbol)

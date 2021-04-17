@@ -16,7 +16,7 @@ interface RatesService {
     fun getSpecificExchangeRate(
         @Query("base") base: String,
         @Query("symbols") symbol: String,
-        ): Single<RateApiResponse>
+    ): Single<RateApiResponse>
 
     @GET("history")
     fun getHistoricalRates(

@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -17,9 +18,11 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.marwaeltayeb.currencyexchange.BaseApplication
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.databinding.ActivityConvertBinding
 import com.marwaeltayeb.currencyexchange.databinding.ActivityMainBinding
+import com.marwaeltayeb.currencyexchange.ui.main.RatesViewModel
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
@@ -27,6 +30,7 @@ import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getEndDate
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getStartDate
 import com.marwaeltayeb.currencyexchange.utils.DialogCallback
 import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCustomAlertDialog
+import javax.inject.Inject
 
 private const val TAG = "ConvertActivity"
 
@@ -34,18 +38,20 @@ class ConvertActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityConvertBinding
 
-    private lateinit var covertViewModel: ConvertViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val covertViewModel by viewModels<ConvertViewModel> { viewModelFactory }
+
     private var rate = 0.0
 
     private var baseCurrency = FROM_CURRENCY
     private var convertedToCurrency = TO_CURRENCY
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as BaseApplication).appComponent.convertComponent().create().inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityConvertBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        covertViewModel = ViewModelProvider(this).get(ConvertViewModel::class.java)
 
         binding.txtCurrencyCodeFrom.text = baseCurrency
         binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))

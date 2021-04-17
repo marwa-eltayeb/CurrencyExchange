@@ -4,14 +4,16 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
+import com.marwaeltayeb.currencyexchange.data.remote.RatesService
 import com.marwaeltayeb.currencyexchange.data.remote.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 private const val TAG = "ConvertRepository"
 
-class ConvertRepository {
+class ConvertRepository @Inject constructor(private val ratesService: RatesService){
 
     private val exchangeRateLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String,Double>>>()
     private val historicalRatesLiveData: MutableLiveData<HistoricApiResponse> = MutableLiveData<HistoricApiResponse>()
@@ -21,7 +23,7 @@ class ConvertRepository {
     fun requestExchangeRateLiveData(base: String, symbol: String){
 
         val observable =
-            RetrofitClient.getRateService().getSpecificExchangeRate(base, symbol)
+            ratesService.getSpecificExchangeRate(base, symbol)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ o: RateApiResponse? ->
@@ -38,7 +40,7 @@ class ConvertRepository {
     fun requestHistoricalRates(startDate: String, endDate: String ,base: String, symbol: String) {
 
         val observable =
-            RetrofitClient.getRateService().getHistoricalRates(startDate, endDate, base, symbol)
+            ratesService.getHistoricalRates(startDate, endDate, base, symbol)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ o: HistoricApiResponse? ->

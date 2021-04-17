@@ -2,10 +2,10 @@ package com.marwaeltayeb.currencyexchange.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.marwaeltayeb.currencyexchange.ui.conversion.ConvertRepository
+import javax.inject.Inject
 
-class RatesViewModel : ViewModel() {
-
-    private var ratesRepository: RatesRepository = RatesRepository()
+class RatesViewModel@Inject constructor(private val ratesRepository: RatesRepository) : ViewModel() {
 
     fun requestLatestRates(base: String) {
         return ratesRepository.requestLatestRatesLiveData(base)

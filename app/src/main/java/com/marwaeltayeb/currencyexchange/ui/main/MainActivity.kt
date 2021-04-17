@@ -7,9 +7,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.marwaeltayeb.currencyexchange.BaseApplication
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.databinding.ActivityMainBinding
 
@@ -20,6 +22,7 @@ import com.marwaeltayeb.currencyexchange.utils.DialogCallback
 import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCustomAlertDialog
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
+import javax.inject.Inject
 
 private const val TAG = "MainActivity"
 
@@ -28,7 +31,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var ratesAdapter: RatesAdapter
-    private lateinit var ratesViewModel:RatesViewModel
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val ratesViewModel by viewModels<RatesViewModel> { viewModelFactory }
 
     private var isSwitched = true
 
@@ -36,13 +42,12 @@ class MainActivity : AppCompatActivity() {
     private var convertedToCurrency = TO_CURRENCY
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as BaseApplication).appComponent.ratesComponent().create().inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initViews()
-
-        ratesViewModel = ViewModelProvider(this).get(RatesViewModel::class.java)
 
         setUpObservers()
 
