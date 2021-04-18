@@ -128,7 +128,7 @@ class ConvertActivity : AppCompatActivity() {
         } else {
             getRate()
 
-            val text = ((binding.edtFirstConversion.text.toString().toDouble()) * rate).toString()
+            val text = String.format("%.4f",((binding.edtFirstConversion.text.toString().toDouble()) * rate))
             binding.edtSecondConversion.setText(text)
         }
     }
