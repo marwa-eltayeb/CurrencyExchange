@@ -1,11 +1,9 @@
 package com.marwaeltayeb.currencyexchange.ui.main
 
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.marwaeltayeb.currencyexchange.R
@@ -26,13 +24,21 @@ class RatesAdapter : RecyclerView.Adapter<RatesAdapter.RatesViewHolder>(){
     override fun onBindViewHolder(holder: RatesViewHolder, position: Int) {
         val currentRate: Pair<String, Double> = rateList[position]
 
-        holder.countryFlag.setImageResource(getFlag(currentRate.first))
-        holder.currencyCode.text = currentRate.first
-        holder.currencyName.text = getCodeName(currentRate.first)
-        if(currentRate.second == 1.0){
-            holder.countryRate.text = "1"
+        val currencyName = currentRate.first
+        val currencyRate = currentRate.second
+
+        if(getCodeName(currencyName) !=  holder.itemView.resources.getString(R.string.none)) {
+            holder.countryFlag.setImageResource(getFlag(currencyName))
+            holder.currencyCode.text = currencyName
+            holder.currencyName.text = getCodeName(currencyName)
+            if (currentRate.second == 1.0) {
+                holder.countryRate.text = "1"
+            } else {
+                holder.countryRate.text = String.format("%.4f", currencyRate)
+            }
         }else{
-            holder.countryRate.text =  String.format("%.4f", currentRate.second)
+            holder.itemView.visibility = View.GONE
+            holder.itemView.layoutParams = RecyclerView.LayoutParams(0, 0)
         }
     }
 

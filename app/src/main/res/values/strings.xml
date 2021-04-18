@@ -42,4 +42,5 @@
     <string name="eur">EUR</string>
     <string name="choose_currency">Choose Currency</string>
     <string name="currency_rates">Currency Rates</string>
+    <string name="none">None</string>
 </resources>

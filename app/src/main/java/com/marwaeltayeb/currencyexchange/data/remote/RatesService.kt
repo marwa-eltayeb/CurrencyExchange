@@ -18,10 +18,10 @@ interface RatesService {
         @Query("symbols") symbol: String,
     ): Single<RateApiResponse>
 
-    @GET("history")
+    @GET("timeseries")
     fun getHistoricalRates(
-        @Query("start_at") startDate: String,
-        @Query("end_at") endDate: String,
+        @Query("start_date") startDate: String,
+        @Query("end_date") endDate: String,
         @Query("base") base: String,
         @Query("symbols") symbol: String,
     ): Single<HistoricApiResponse>

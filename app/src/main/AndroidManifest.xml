@@ -14,22 +14,22 @@
         android:theme="@style/Theme.CurrencyExchange"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".ui.main.MainActivity"
-                  android:screenOrientation="portrait">
-
-        </activity>
-
         <activity
-            android:name=".ui.conversion.ConvertActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ui.main.MainActivity"
-            android:label="@string/converter">
-
+            android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.conversion.ConvertActivity"
+            android:label="@string/converter"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />

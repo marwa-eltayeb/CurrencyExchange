@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
 import com.marwaeltayeb.currencyexchange.data.remote.RatesService
-import com.marwaeltayeb.currencyexchange.data.remote.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
