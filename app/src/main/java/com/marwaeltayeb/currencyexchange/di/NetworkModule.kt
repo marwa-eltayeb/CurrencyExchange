@@ -22,6 +22,7 @@ class NetworkModule {
             .build()
     }
 
+    @Singleton
     @Provides
     fun provideRatesService(retrofit: Retrofit): RatesService{
         return retrofit.create(RatesService::class.java)
