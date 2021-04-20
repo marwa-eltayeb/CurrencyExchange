@@ -57,6 +57,7 @@ dependencies {
     def dagger_version = "2.22"
     def espresso_version = "3.3.0"
     def mpandroidchart_version = "v3.1.0"
+    def leakcanary_version = "2.7"
 
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -98,6 +99,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     // RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }
