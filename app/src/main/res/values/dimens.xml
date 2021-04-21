@@ -2,7 +2,7 @@
 <resources>
     <dimen name="item_flag_height">80dp</dimen>
     <dimen name="item_flag_width">80dp</dimen>
-    <dimen name="item_flag_padding">10dp</dimen>
+    <dimen name="item_flag_padding">2dp</dimen>
     <dimen name="item_currencyCode_height">45dp</dimen>
     <dimen name="item_currencyCode_padding">3dp</dimen>
     <dimen name="item_currencyCode_textSize">16sp</dimen>
@@ -15,8 +15,8 @@
     <dimen name="item_marginTop">10dp</dimen>
 
     <dimen name="main_flag_padding">10dp</dimen>
-    <dimen name="main_flag_height">100dp</dimen>
-    <dimen name="main_flag_width">150dp</dimen>
+    <dimen name="main_flag_height">80dp</dimen>
+    <dimen name="main_flag_width">80dp</dimen>
     <dimen name="main_convert_height">60dp</dimen>
     <dimen name="main_convert_width">60dp</dimen>
     <dimen name="main_currencyCode_height">45dp</dimen>
