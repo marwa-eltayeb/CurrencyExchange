@@ -1,5 +1,5 @@
 # Currency-Exchange
-Currency Exchange App that displays real-time currency rates, shows a chart for any currency pair in the world to see their currency history and provides a currency converter to convert over 180 currencies. 
+Currency Exchange App that displays real-time currency rates, shows a chart for any currency pair in the world to see their currency history and provides a currency converter to convert over 180 currencies implemented in MVVM Architecture using Koltin.
 
 ## Features:
 
