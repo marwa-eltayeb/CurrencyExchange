@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpObservers() {
         ratesViewModel.getLatestRates().observe(this, {
-            ratesAdapter.setRates(it)
+            ratesAdapter.submitList(it)
             ratesAdapter.notifyDataSetChanged()
         })
 
