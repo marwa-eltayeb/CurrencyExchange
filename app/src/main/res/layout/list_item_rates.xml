@@ -16,7 +16,7 @@
         android:layout_margin="5dp">
 
         <ImageView
-            android:id="@+id/img_country_flag"
+            android:id="@+id/imgCountryFlag"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/item_flag_padding"
@@ -33,7 +33,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txt_currency_code"
+            android:id="@+id/txtCurrencyCode"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/item_currencyCode_height"
             android:ellipsize="end"
@@ -45,7 +45,7 @@
             tools:text="EUR" />
 
         <TextView
-            android:id="@+id/txt_currency_name"
+            android:id="@+id/txtCurrencyName"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/item_currencyName_height"
             android:gravity="start"
@@ -56,7 +56,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/txt_currency_rate"
+        android:id="@+id/txtCurrencyRate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="end|center"
