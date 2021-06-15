@@ -14,13 +14,19 @@ class RatesViewModel @Inject constructor(private val ratesRepository: RatesRepos
 
     private val latestRatesLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String, Double>>>()
     private val exchangeRateLiveData: MutableLiveData<List<Pair<String, Double>>> = MutableLiveData<List<Pair<String, Double>>>()
+
+    private val _dataLoading = MutableLiveData<Boolean>()
+    val dataLoading: LiveData<Boolean> = _dataLoading
+
     private var compositeDisposable = CompositeDisposable()
 
     fun requestLatestRates(base: String) {
+        _dataLoading.value = true
         val observable = ratesRepository.requestLatestRatesLiveData(base)
             .subscribe({ o: RateApiResponse? ->
                 Log.d(TAG, "Succeeded")
                 latestRatesLiveData.setValue(o?.rates?.toList())
+                _dataLoading.value = false
             }, { e: Throwable -> Log.d(TAG, "onFailure: ${e.message.toString()}") })
 
         compositeDisposable.add(observable)

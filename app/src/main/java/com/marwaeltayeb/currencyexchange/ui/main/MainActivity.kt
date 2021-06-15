@@ -73,6 +73,14 @@ class MainActivity : AppCompatActivity() {
             Log.d("HI", "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
             binding.txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
         })
+
+        ratesViewModel.dataLoading.observe(this, { isDataLoaded ->
+           if(isDataLoaded){
+               binding.loadingIndicator.visibility = View.VISIBLE
+           }else{
+               binding.loadingIndicator.visibility = View.INVISIBLE
+           }
+        })
     }
 
     private fun initViews(){

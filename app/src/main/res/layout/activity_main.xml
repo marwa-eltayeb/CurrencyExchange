@@ -54,10 +54,10 @@
             android:layout_height="@dimen/main_currencyCode_height"
             android:gravity="start|bottom"
             android:padding="10dp"
-            tools:text="US Dollar"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_currencyCode_textSize"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="US Dollar" />
 
         <TextView
             android:id="@+id/txt_currency_name_to"
@@ -65,10 +65,10 @@
             android:layout_height="@dimen/main_currencyCode_height"
             android:gravity="end"
             android:padding="10dp"
-            tools:text="Euro"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_currencyCode_textSize"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Euro" />
     </LinearLayout>
 
     <LinearLayout
@@ -96,10 +96,10 @@
             android:layout_weight=".7"
             android:gravity="start|bottom"
             android:padding="@dimen/main_currencyCode_padding"
-            tools:text="USD"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_textSize"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="USD" />
 
         <TextView
             android:layout_width="0dp"
@@ -132,10 +132,10 @@
             android:gravity="end"
             android:paddingStart="@dimen/main_currencyCode_padding"
             android:paddingEnd="@dimen/main_currencyCode_padding"
-            tools:text="EUR"
             android:textColor="@color/grey"
             android:textSize="@dimen/main_textSize"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="EUR" />
     </LinearLayout>
 
     <View
@@ -147,9 +147,23 @@
         android:layout_marginBottom="@dimen/main_view_margin_bottom"
         android:background="@android:color/black" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rc_rates_list"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/list_item_rates" />
+        tools:context=".ui.main.MainActivity">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_rates_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/list_item_rates" />
+
+        <ProgressBar
+            android:id="@+id/loadingIndicator"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
 </LinearLayout>
