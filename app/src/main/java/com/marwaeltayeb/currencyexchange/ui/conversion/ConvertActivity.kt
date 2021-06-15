@@ -207,7 +207,6 @@ class ConvertActivity : AppCompatActivity() {
             showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
                 override fun onCallback(listView: ListView, item: Int) {
                     convertedToCurrency = listView.getItemAtPosition(item) as String
-                    Log.d("sad", convertedToCurrency)
                     binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
                     binding.txtCurrencyCodeTo.text = convertedToCurrency
                     getRate()

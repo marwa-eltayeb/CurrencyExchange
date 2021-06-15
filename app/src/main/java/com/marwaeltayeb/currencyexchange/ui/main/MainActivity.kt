@@ -20,6 +20,7 @@ import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.DialogCallback
 import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCustomAlertDialog
+import com.marwaeltayeb.currencyexchange.utils.NetworkUtils.isNetworkAvailable
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
 import javax.inject.Inject
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         ratesViewModel.getExchangeRate().observe(this, {
-            Log.d("HI", "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
+            Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
             binding.txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
         })
 
@@ -93,7 +94,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAllRates(base: String) {
-        ratesViewModel.requestLatestRates(base)
+        if (!isNetworkAvailable(this)) {
+            Toast.makeText(applicationContext, "Check Internet Connection", Toast.LENGTH_LONG).show()
+        }else {
+            ratesViewModel.requestLatestRates(base)
+        }
     }
 
     private fun updateExchangeRateUi(baseCurrency:String, convertedToCurrency: String){

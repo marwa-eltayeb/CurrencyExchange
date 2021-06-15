@@ -44,7 +44,7 @@
             android:padding="@dimen/convert_padding"
             android:textColor="@color/black"
             android:textSize="@dimen/convert_textSize"
-            tools:text="0.82443" />
+            android:text="\?\?\?" />
 
         <TextView
             android:id="@+id/txt_currency_code_to"
