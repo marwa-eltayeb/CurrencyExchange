@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         // Required when setting minSdkVersion to 20 or lower
         multiDexEnabled true
         applicationId "com.marwaeltayeb.currencyexchange"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -51,7 +51,7 @@ repositories {
 
 dependencies {
 
-    def support_version = "1.2.0"
+    def support_version = "1.2.1"
     def retrofit_version = "2.7.2"
     def view_model_version = "2.2.0"
     def dagger_version = "2.35.1"

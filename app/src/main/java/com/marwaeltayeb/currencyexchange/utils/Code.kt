@@ -8,7 +8,7 @@ class Code {
     companion object {
 
         fun getCurrencyCodes(context: Context): ArrayList<String> {
-            val codes: ArrayList<String> = ArrayList<String>()
+            val codes: ArrayList<String> = ArrayList()
             codes.add(context.getString(R.string.cad))
             codes.add(context.getString(R.string.hkd))
             codes.add(context.getString(R.string.isk))
@@ -41,7 +41,7 @@ class Code {
             codes.add(context.getString(R.string.gbp))
             codes.add(context.getString(R.string.krw))
             codes.add(context.getString(R.string.eur))
-            return codes;
+            return codes
         }
     }
 }
