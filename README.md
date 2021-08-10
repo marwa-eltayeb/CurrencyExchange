@@ -21,3 +21,5 @@ Currency Exchange App that displays real-time currency rates, shows a chart for 
 
 ## Screenshots
  <img src="https://i.imgur.com/RplIbTf.png" width="250" height="418">  <img src="https://i.imgur.com/L2mCdSW.png" width="250" height="418">>  
+
+Project Preview: [Youtube](https://youtu.be/wnM5ywZzLF8).
