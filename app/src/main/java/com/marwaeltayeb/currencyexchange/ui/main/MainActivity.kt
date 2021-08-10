@@ -2,7 +2,6 @@ package com.marwaeltayeb.currencyexchange.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +22,7 @@ import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCusto
 import com.marwaeltayeb.currencyexchange.utils.NetworkUtils.isNetworkAvailable
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         ratesViewModel.getExchangeRate().observe(this, {
-            Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
+            Timber.tag(TAG).d("$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
             binding.txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
         })
 

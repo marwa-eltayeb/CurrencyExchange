@@ -4,14 +4,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -21,8 +19,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.marwaeltayeb.currencyexchange.BaseApplication
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.databinding.ActivityConvertBinding
-import com.marwaeltayeb.currencyexchange.databinding.ActivityMainBinding
-import com.marwaeltayeb.currencyexchange.ui.main.RatesViewModel
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
@@ -30,6 +26,7 @@ import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getEndDate
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getStartDate
 import com.marwaeltayeb.currencyexchange.utils.DialogCallback
 import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCustomAlertDialog
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val TAG = "ConvertActivity"
@@ -73,14 +70,14 @@ class ConvertActivity : AppCompatActivity() {
 
     private fun setUpObservers() {
         covertViewModel.getExchangeRate().observe(this, {
-            Log.d(TAG, "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
+            Timber.tag(TAG).d( "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
             rate = it.get(0).second
             binding.txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
         })
 
         covertViewModel.getHistoricalRates().observe(this, { data ->
             val response = data.rates.toSortedMap()
-            Log.d(TAG, "getHistoricalRates: {${convertedToCurrency}} + ${response.values} ? ")
+            Timber.tag(TAG).d( "getHistoricalRates: {${convertedToCurrency}} + ${response.values} ? ")
 
             val listOfRates = arrayListOf<Entry>()
 
@@ -112,11 +109,11 @@ class ConvertActivity : AppCompatActivity() {
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.d(TAG, "Before Text Changed")
+                Timber.tag(TAG).d( "Before Text Changed")
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.d(TAG, "OnTextChanged")
+                Timber.tag(TAG).d( "OnTextChanged")
             }
         })
     }
@@ -183,7 +180,7 @@ class ConvertActivity : AppCompatActivity() {
 
     class XAxisValueFormatter(private val values: List<String>) : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
-            Log.d(TAG, "getFormattedValue: Index ${value}  -> ${values.elementAt(value.toInt())}")
+            Timber.tag(TAG).d( "getFormattedValue: Index ${value}  -> ${values.elementAt(value.toInt())}")
             return values[value.toInt()]
         }
     }

@@ -1,12 +1,12 @@
 package com.marwaeltayeb.currencyexchange.ui.conversion
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
 import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val TAG = "ConvertViewModel"
@@ -20,9 +20,9 @@ class ConvertViewModel @Inject constructor(private val convertRepository: Conver
     fun requestExchangeRate(base: String, symbol: String) {
         val observable = convertRepository.requestExchangeRateLiveData(base, symbol)
             .subscribe({ o: RateApiResponse? ->
-                Log.d(TAG, "Succeeded")
+                Timber.tag(TAG).d( "Succeeded")
                 exchangeRateLiveData.setValue(o?.rates?.toList())
-            }, { e: Throwable -> Log.d(TAG, "onFailure: ${e.message.toString()}") })
+            }, { e: Throwable -> Timber.tag(TAG).d( "onFailure: ${e.message.toString()}") })
 
         compositeDisposable.add(observable)
     }
@@ -34,9 +34,9 @@ class ConvertViewModel @Inject constructor(private val convertRepository: Conver
     fun requestHistoricalRates(startDate: String, endDate: String, base: String, symbol: String) {
         val observable = convertRepository.requestHistoricalRates(startDate, endDate, base, symbol)
             .subscribe({ o: HistoricApiResponse? ->
-                Log.d(TAG, "Succeeded")
+                Timber.tag(TAG).d("Succeeded")
                 historicalRatesLiveData.setValue(o)
-            }, { e: Throwable -> Log.d(TAG, "onFailure: ${e.message.toString()}") })
+            }, { e: Throwable -> Timber.tag(TAG).d( "onFailure: ${e.message.toString()}") })
 
         compositeDisposable.add(observable)
     }
