@@ -10,12 +10,6 @@ import javax.inject.Inject
 
 class ConvertRepository @Inject constructor(private val ratesService: RatesService){
 
-    fun requestExchangeRateLiveData(base: String, symbol: String) : Single<RateApiResponse> {
-        return ratesService.getSpecificExchangeRate(base, symbol)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
     fun requestHistoricalRates(startDate: String, endDate: String ,base: String, symbol: String): Single<HistoricApiResponse> {
         return ratesService.getHistoricalRates(startDate, endDate, base, symbol)
             .subscribeOn(Schedulers.io())
