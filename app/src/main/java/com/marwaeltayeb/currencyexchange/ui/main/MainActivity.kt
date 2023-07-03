@@ -94,10 +94,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAllRates(base: String) {
+        ratesViewModel.requestLatestRates(base)
         if (!isNetworkAvailable(this)) {
             Toast.makeText(applicationContext, "Check Internet Connection", Toast.LENGTH_LONG).show()
-        }else {
-            ratesViewModel.requestLatestRates(base)
         }
     }
 
