@@ -1,7 +1,6 @@
 package com.marwaeltayeb.currencyexchange.ui.conversion
 
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
-import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
 import com.marwaeltayeb.currencyexchange.data.remote.RatesService
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

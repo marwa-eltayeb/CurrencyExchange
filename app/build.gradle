@@ -58,7 +58,7 @@ dependencies {
     def espresso_version = "3.3.0"
     def mpandroidchart_version = "v3.1.0"
     def leakcanary_version = "2.7"
-
+    def swipeToRefresh_version = "1.1.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.5.0'
@@ -108,6 +108,9 @@ dependencies {
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Swipe to Refresh
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeToRefresh_version"
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }

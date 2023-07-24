@@ -1,169 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeToRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ui.main.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <ImageView
-            android:id="@+id/img_currency_flag_from"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/main_flag_height"
-            android:layout_margin="@dimen/main_flag_padding"
-            android:layout_weight="1"
-            android:contentDescription="@string/currency_flag"
-            android:scaleType="fitXY"
-            tools:src="@color/grey" />
-
-        <ImageView
-            android:id="@+id/img_convert"
-            android:layout_width="@dimen/main_convert_width"
-            android:layout_height="@dimen/main_convert_height"
-            android:layout_gravity="center"
-            android:contentDescription="@string/currency_flag"
-            android:padding="@dimen/main_flag_padding"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_autorenew" />
-
-        <ImageView
-            android:id="@+id/img_currency_flag_to"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/main_flag_height"
-            android:layout_margin="@dimen/main_flag_padding"
-            android:layout_weight="1"
-            android:contentDescription="@string/currency_flag"
-            android:scaleType="fitXY"
-            tools:src="@color/grey" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/txt_currency_name_from"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/main_currencyCode_height"
-            android:gravity="start|bottom"
-            android:padding="10dp"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/main_currencyCode_textSize"
-            android:textStyle="bold"
-            tools:text="US Dollar" />
-
-        <TextView
-            android:id="@+id/txt_currency_name_to"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/main_currencyCode_height"
-            android:gravity="end"
-            android:padding="10dp"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/main_currencyCode_textSize"
-            android:textStyle="bold"
-            tools:text="Euro" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="5">
-
-        <TextView
-            android:id="@+id/txt_currency_rate_from"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/main_currencyRate_height"
-            android:layout_weight="1.3"
-            android:paddingStart="@dimen/main_currencyRateTo_padding"
-            android:paddingEnd="@dimen/main_currencyRateTo_padding"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/main_textSize"
-            android:textStyle="bold"
-            tools:text="1" />
-
-        <TextView
-            android:id="@+id/txt_currency_code_from"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/main_currencyCode_height"
-            android:layout_weight=".7"
-            android:gravity="start|bottom"
-            android:padding="@dimen/main_currencyCode_padding"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/main_textSize"
-            android:textStyle="bold"
-            tools:text="USD" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="@dimen/main_equal_padding"
-            android:text="@string/equal"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/main_equal_textSize"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txt_currency_rate_to"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/main_currencyRate_height"
-            android:layout_weight="1.3"
-            android:gravity="start"
-            android:padding="@dimen/main_currencyRateFrom_padding"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/main_textSize"
-            android:textStyle="bold"
-            android:text="\?\?\?" />
-
-        <TextView
-            android:id="@+id/txt_currency_code_to"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/main_currencyCode_height"
-            android:layout_weight=".7"
-            android:gravity="end"
-            android:paddingStart="@dimen/main_currencyCode_padding"
-            android:paddingEnd="@dimen/main_currencyCode_padding"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/main_textSize"
-            android:textStyle="bold"
-            tools:text="EUR" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="@dimen/main_view_margin_left"
-        android:layout_marginTop="@dimen/main_view_margin_top"
-        android:layout_marginEnd="@dimen/main_view_margin_right"
-        android:layout_marginBottom="@dimen/main_view_margin_bottom"
-        android:background="@android:color/black" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.MainActivity">
+        android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rc_rates_list"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:id="@+id/img_currency_flag_from"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/main_flag_height"
+                android:layout_margin="@dimen/main_flag_padding"
+                android:layout_weight="1"
+                android:contentDescription="@string/currency_flag"
+                android:scaleType="fitXY"
+                tools:src="@color/grey" />
+
+            <ImageView
+                android:id="@+id/img_convert"
+                android:layout_width="@dimen/main_convert_width"
+                android:layout_height="@dimen/main_convert_height"
+                android:layout_gravity="center"
+                android:contentDescription="@string/currency_flag"
+                android:padding="@dimen/main_flag_padding"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_autorenew" />
+
+            <ImageView
+                android:id="@+id/img_currency_flag_to"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/main_flag_height"
+                android:layout_margin="@dimen/main_flag_padding"
+                android:layout_weight="1"
+                android:contentDescription="@string/currency_flag"
+                android:scaleType="fitXY"
+                tools:src="@color/grey" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txt_currency_name_from"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/main_currencyCode_height"
+                android:gravity="start|bottom"
+                android:padding="10dp"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/main_currencyCode_textSize"
+                android:textStyle="bold"
+                tools:text="US Dollar" />
+
+            <TextView
+                android:id="@+id/txt_currency_name_to"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/main_currencyCode_height"
+                android:gravity="end"
+                android:padding="10dp"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/main_currencyCode_textSize"
+                android:textStyle="bold"
+                tools:text="Euro" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <TextView
+                android:id="@+id/txt_currency_rate_from"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/main_currencyRate_height"
+                android:layout_weight="1.3"
+                android:paddingStart="@dimen/main_currencyRateTo_padding"
+                android:paddingEnd="@dimen/main_currencyRateTo_padding"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/main_textSize"
+                android:textStyle="bold"
+                tools:text="1" />
+
+            <TextView
+                android:id="@+id/txt_currency_code_from"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/main_currencyCode_height"
+                android:layout_weight=".7"
+                android:gravity="start|bottom"
+                android:padding="@dimen/main_currencyCode_padding"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/main_textSize"
+                android:textStyle="bold"
+                tools:text="USD" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/main_equal_padding"
+                android:text="@string/equal"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/main_equal_textSize"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_currency_rate_to"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/main_currencyRate_height"
+                android:layout_weight="1.3"
+                android:gravity="start"
+                android:padding="@dimen/main_currencyRateFrom_padding"
+                android:text="\?\?\?"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/main_textSize"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_currency_code_to"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/main_currencyCode_height"
+                android:layout_weight=".7"
+                android:gravity="end"
+                android:paddingStart="@dimen/main_currencyCode_padding"
+                android:paddingEnd="@dimen/main_currencyCode_padding"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/main_textSize"
+                android:textStyle="bold"
+                tools:text="EUR" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/main_view_margin_left"
+            android:layout_marginTop="@dimen/main_view_margin_top"
+            android:layout_marginEnd="@dimen/main_view_margin_right"
+            android:layout_marginBottom="@dimen/main_view_margin_bottom"
+            android:background="@android:color/black" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/list_item_rates" />
+            tools:context=".ui.main.MainActivity">
 
-        <ProgressBar
-            android:id="@+id/loadingIndicator"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="invisible" />
-    </RelativeLayout>
-</LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rc_rates_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/list_item_rates" />
+
+            <ProgressBar
+                android:id="@+id/loadingIndicator"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="invisible" />
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

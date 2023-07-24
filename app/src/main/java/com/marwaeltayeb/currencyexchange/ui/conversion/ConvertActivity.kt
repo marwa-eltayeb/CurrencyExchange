@@ -26,6 +26,7 @@ import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getEndDate
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getStartDate
 import com.marwaeltayeb.currencyexchange.utils.DialogCallback
 import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCustomAlertDialog
+import com.marwaeltayeb.currencyexchange.utils.showToast
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -39,7 +40,7 @@ class ConvertActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val covertViewModel by viewModels<ConvertViewModel> { viewModelFactory }
 
-    private var rate = 0.0
+    private var updatedRate = 0.0
 
     private var baseCurrency = FROM_CURRENCY
     private var convertedToCurrency = TO_CURRENCY
@@ -57,31 +58,30 @@ class ConvertActivity : AppCompatActivity() {
         binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
 
         setUpObservers()
-
-        getRate()
-
         setupTextWatcher()
 
-        getHistoricalRates()
+        loadRate()
+        loadHistoricalRates()
 
         binding.imgCurrencyFlagFrom.setOnClickListener(imgCurrencyFlagFromListener)
         binding.imgCurrencyFlagTo.setOnClickListener(imgCurrencyFlagToListener)
     }
 
     private fun setUpObservers() {
-        covertViewModel.getExchangeRate().observe(this, {
-            Timber.tag(TAG).d( "$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
-            rate = it.get(0).second
-            binding.txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
-        })
+        covertViewModel.exchangeRateLiveData.observe(this) { rate ->
+            Timber.tag(TAG).d("$baseCurrency to $convertedToCurrency = ${rate.get(0).second}")
+            updatedRate = rate.get(0).second
+            binding.txtCurrencyRateTo.text = String.format("%.4f", rate.get(0).second)
+        }
 
-        covertViewModel.getHistoricalRates().observe(this, { data ->
+        covertViewModel.historicalRatesLiveData.observe(this) { data ->
             val response = data.rates.toSortedMap()
-            Timber.tag(TAG).d( "getHistoricalRates: {${convertedToCurrency}} + ${response.values} ? ")
+
+            Timber.tag(TAG).d("getHistoricalRates: {${convertedToCurrency}} + ${response.values} ? ")
 
             val listOfRates = arrayListOf<Entry>()
 
-            repeat(5){ i ->
+            repeat(5) { i ->
                 listOfRates.add(Entry(i.toFloat(), response.values.elementAt(i)[convertedToCurrency]!!.toFloat()))
             }
 
@@ -91,7 +91,7 @@ class ConvertActivity : AppCompatActivity() {
             }
 
             setLineChart(dates, listOfRates)
-        })
+        }
     }
 
     private fun setupTextWatcher() {
@@ -103,7 +103,7 @@ class ConvertActivity : AppCompatActivity() {
                     try {
                         getResult()
                     } catch (e: Exception) {
-                        Toast.makeText(applicationContext, "Type a value", Toast.LENGTH_SHORT).show()
+                        showToast("Type a value")
                     }
                 }
             }
@@ -120,17 +120,16 @@ class ConvertActivity : AppCompatActivity() {
 
     private fun getResult() {
         if (baseCurrency == convertedToCurrency) {
-            Toast.makeText(this, "Please pick a currency to convert", Toast.LENGTH_SHORT).show()
+            showToast("Please pick a currency to convert")
             binding.txtCurrencyRateTo.text = "???"
         } else {
-            getRate()
-
-            val text = String.format("%.4f",((binding.edtFirstConversion.text.toString().toDouble()) * rate))
+            loadRate()
+            val text = String.format("%.4f",((binding.edtFirstConversion.text.toString().toDouble()) * updatedRate))
             binding.edtSecondConversion.setText(text)
         }
     }
 
-    private fun getRate() {
+    private fun loadRate() {
         if (baseCurrency == convertedToCurrency) {
             binding.txtCurrencyRateTo.text = "???"
         } else {
@@ -138,7 +137,7 @@ class ConvertActivity : AppCompatActivity() {
         }
     }
 
-    private fun getHistoricalRates() {
+    private fun loadHistoricalRates() {
         covertViewModel.requestHistoricalRates(getStartDate(),getEndDate(),baseCurrency, convertedToCurrency)
     }
 
@@ -185,32 +184,28 @@ class ConvertActivity : AppCompatActivity() {
         }
     }
 
-    private val imgCurrencyFlagFromListener = object : View.OnClickListener {
-        override fun onClick(v: View?) {
-            showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
-                override fun onCallback(listView: ListView, item: Int) {
-                    baseCurrency = listView.getItemAtPosition(item) as String
-                    binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
-                    binding.txtCurrencyCodeFrom.text = baseCurrency
-                    getRate()
-                    getHistoricalRates()
-                }
-            })
-        }
+    private val imgCurrencyFlagFromListener = View.OnClickListener {
+        showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
+            override fun onCallback(listView: ListView, item: Int) {
+                baseCurrency = listView.getItemAtPosition(item) as String
+                binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
+                binding.txtCurrencyCodeFrom.text = baseCurrency
+                loadRate()
+                loadHistoricalRates()
+            }
+        })
     }
 
-    private val imgCurrencyFlagToListener = object : View.OnClickListener {
-        override fun onClick(v: View?) {
-            showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
-                override fun onCallback(listView: ListView, item: Int) {
-                    convertedToCurrency = listView.getItemAtPosition(item) as String
-                    binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
-                    binding.txtCurrencyCodeTo.text = convertedToCurrency
-                    getRate()
-                    getHistoricalRates()
-                }
-            })
-        }
+    private val imgCurrencyFlagToListener = View.OnClickListener {
+        showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
+            override fun onCallback(listView: ListView, item: Int) {
+                convertedToCurrency = listView.getItemAtPosition(item) as String
+                binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+                binding.txtCurrencyCodeTo.text = convertedToCurrency
+                loadRate()
+                loadHistoricalRates()
+            }
+        })
     }
 }
 

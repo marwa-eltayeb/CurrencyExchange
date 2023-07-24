@@ -11,7 +11,10 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 import javax.inject.Singleton
+
+private const val TAG = "NetworkModule"
 
 @Module
 class NetworkModule {
@@ -30,10 +33,13 @@ class NetworkModule {
             .cache(cache)
             .addInterceptor { chain ->
                 var request = chain.request()
-                request = if (NetworkUtils.isNetworkAvailable(context))
-                    request.newBuilder().header("Cache-Control", "public, max-age=" + 5).build()
-                else
-                    request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build()
+                if (NetworkUtils.isNetworkAvailable(context)) {
+                    request = request.newBuilder().header("Cache-Control", "public, max-age=" + 5).removeHeader("Pragma").build()
+                    Timber.tag(TAG).d("Response from Network")
+                } else {
+                    request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).removeHeader("Pragma").build()
+                    Timber.tag(TAG).d("Response from Cache")
+                }
                 chain.proceed(request)
             }
             .build()
@@ -52,7 +58,7 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRatesService(retrofit: Retrofit): RatesService{
+    fun provideRatesService(retrofit: Retrofit): RatesService {
         return retrofit.create(RatesService::class.java)
     }
 }

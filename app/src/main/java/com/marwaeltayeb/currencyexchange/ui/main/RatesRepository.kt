@@ -9,13 +9,13 @@ import javax.inject.Inject
 
 class RatesRepository @Inject constructor(private val ratesService: RatesService) {
 
-    fun requestLatestRatesLiveData(base: String) : Single<RateApiResponse> {
+    fun requestLatestRates(base: String) : Single<RateApiResponse> {
         return ratesService.getLatestRatesByBase(base)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun requestExchangeRateLiveData(base: String, symbol: String):Single<RateApiResponse>{
+    fun requestExchangeRate(base: String, symbol: String):Single<RateApiResponse>{
         return ratesService.getSpecificExchangeRate(base, symbol)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

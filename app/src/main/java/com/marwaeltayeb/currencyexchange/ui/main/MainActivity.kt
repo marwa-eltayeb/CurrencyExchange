@@ -8,8 +8,10 @@ import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.marwaeltayeb.currencyexchange.BaseApplication
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.databinding.ActivityMainBinding
@@ -22,6 +24,7 @@ import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCusto
 import com.marwaeltayeb.currencyexchange.utils.NetworkUtils.isNetworkAvailable
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
 import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
+import com.marwaeltayeb.currencyexchange.utils.showSnackBar
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,39 +52,33 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViews()
-
         setUpObservers()
 
+        loadRate(baseCurrency, convertedToCurrency)
+        updateExchangeRateUi(baseCurrency, convertedToCurrency)
         loadAllRates(FROM_CURRENCY)
 
-        loadDefaultRate()
-
-        binding.imgConvert.setOnClickListener {
-            exchangeRate()
-        }
-
+        binding.imgConvert.setOnClickListener(exChangeRateListener)
         binding.imgCurrencyFlagFrom.setOnClickListener(onImgFlagFromListener)
         binding.imgCurrencyFlagTo.setOnClickListener(onImgFlagToListener)
+        binding.swipeToRefresh.setOnRefreshListener(onSwipeToRefreshListener)
     }
 
     private fun setUpObservers() {
-        ratesViewModel.getLatestRates().observe(this, {
-            ratesAdapter.submitList(it)
-            ratesAdapter.notifyDataSetChanged()
-        })
+        ratesViewModel.latestRatesLiveData.observe(this) {latestRatesList ->
+            Timber.tag(TAG).d(latestRatesList.size.toString())
+            ratesAdapter.submitList(latestRatesList)
+        }
 
-        ratesViewModel.getExchangeRate().observe(this, {
-            Timber.tag(TAG).d("$baseCurrency to $convertedToCurrency = ${it.get(0).second}")
-            binding.txtCurrencyRateTo.text = String.format("%.4f", it.get(0).second)
-        })
+        ratesViewModel.exchangeRateLiveData.observe(this) {rate->
+            Timber.tag(TAG).d("$baseCurrency to $convertedToCurrency = ${rate.get(0).second}")
+            binding.txtCurrencyRateTo.text = String.format("%.4f", rate.get(0).second)
+        }
 
-        ratesViewModel.dataLoading.observe(this, { isDataLoaded ->
-           if(isDataLoaded){
-               binding.loadingIndicator.visibility = View.VISIBLE
-           }else{
-               binding.loadingIndicator.visibility = View.INVISIBLE
-           }
-        })
+        ratesViewModel.dataLoading.observe(this) { isDataLoaded ->
+            if (isDataLoaded) binding.loadingIndicator.visibility = View.GONE
+            else binding.loadingIndicator.visibility = View.VISIBLE
+        }
     }
 
     private fun initViews(){
@@ -91,13 +88,6 @@ class MainActivity : AppCompatActivity() {
 
         ratesAdapter = RatesAdapter()
         binding.rcRatesList.adapter = ratesAdapter
-    }
-
-    private fun loadAllRates(base: String) {
-        ratesViewModel.requestLatestRates(base)
-        if (!isNetworkAvailable(this)) {
-            Toast.makeText(applicationContext, "Check Internet Connection", Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun updateExchangeRateUi(baseCurrency:String, convertedToCurrency: String){
@@ -111,30 +101,29 @@ class MainActivity : AppCompatActivity() {
         binding.txtCurrencyCodeTo.text = convertedToCurrency
     }
 
-    private fun loadDefaultRate() {
-        getRate(baseCurrency, convertedToCurrency)
-        
-        updateExchangeRateUi(baseCurrency, convertedToCurrency)
+    private fun loadRate(from:String, to:String) {
+        if (from == to) binding.txtCurrencyRateTo.text = "???" else ratesViewModel.requestExchangeRate(from, to)
     }
 
-    private fun exchangeRate(){
+    private fun loadAllRates(base: String) {
+        ratesViewModel.requestLatestRates(base)
+        binding.swipeToRefresh.isRefreshing = false
+        if (!isNetworkAvailable(this)) {
+            showSnackBar("Check Internet Connection")
+            binding.loadingIndicator.visibility = View.GONE
+        }
+    }
+
+    private fun toggleExchangeRate(){
         if(isSwitched) {
-
-            getRate(convertedToCurrency, baseCurrency)
-
-            loadAllRates(convertedToCurrency)
-
+            loadRate(convertedToCurrency, baseCurrency)
             updateExchangeRateUi(convertedToCurrency, baseCurrency)
-
+            loadAllRates(convertedToCurrency)
             isSwitched = false
         }else {
-
-            getRate(baseCurrency, convertedToCurrency)
-
-            loadAllRates(baseCurrency)
-
+            loadRate(baseCurrency, convertedToCurrency)
             updateExchangeRateUi(baseCurrency, convertedToCurrency)
-
+            loadAllRates(baseCurrency)
             isSwitched = true
         }
     }
@@ -156,39 +145,48 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getRate(from:String, to:String) {
-        if (from == to) {
-            binding.txtCurrencyRateTo.text = "???"
+    private val exChangeRateListener = View.OnClickListener {
+        toggleExchangeRate()
+    }
+
+    private val onImgFlagFromListener = View.OnClickListener {
+        showCustomAlertDialog(this@MainActivity,object: DialogCallback{
+            override fun onCallback(listView: ListView, item: Int) {
+                loadRate(baseCurrency, convertedToCurrency)
+                baseCurrency = listView.getItemAtPosition(item) as String
+                binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
+                binding.txtCurrencyNameFrom.text = getCodeName(baseCurrency)
+                binding.txtCurrencyCodeFrom.text = baseCurrency
+                loadAllRates(baseCurrency)
+            }
+        })
+    }
+
+    private val onImgFlagToListener = View.OnClickListener {
+        showCustomAlertDialog(this@MainActivity,object: DialogCallback{
+            override fun onCallback(listView: ListView, item: Int) {
+                loadRate(baseCurrency, convertedToCurrency)
+                convertedToCurrency = listView.getItemAtPosition(item) as String
+                binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+                binding.txtCurrencyNameTo.text = getCodeName(convertedToCurrency)
+                binding.txtCurrencyCodeTo.text = convertedToCurrency
+            }
+        })
+    }
+
+    private val onSwipeToRefreshListener = SwipeRefreshLayout.OnRefreshListener {
+        if (isNetworkAvailable(this)) {
+            loadAllRates(baseCurrency)
         } else {
-            ratesViewModel.requestExchangeRate(from, to)
+            showSnackBar("Check Internet Connection")
+            binding.swipeToRefresh.isRefreshing = false
         }
-    }
 
-    private val onImgFlagFromListener = object : View.OnClickListener {
-        override fun onClick(v: View?) {
-            showCustomAlertDialog(this@MainActivity,object: DialogCallback{
-                override fun onCallback(listView: ListView, item: Int) {
-                    baseCurrency = listView.getItemAtPosition(item) as String
-                    binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
-                    binding.txtCurrencyCodeFrom.text = baseCurrency
-                    binding.txtCurrencyNameFrom.text = getCodeName(baseCurrency)
-                    getRate(baseCurrency, convertedToCurrency)
-                }
-            })
-        }
-    }
-
-    private val onImgFlagToListener = object : View.OnClickListener {
-        override fun onClick(v: View?) {
-            showCustomAlertDialog(this@MainActivity,object: DialogCallback{
-                override fun onCallback(listView: ListView, item: Int) {
-                    convertedToCurrency = listView.getItemAtPosition(item) as String
-                    binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
-                    binding.txtCurrencyCodeTo.text = convertedToCurrency
-                    binding.txtCurrencyNameTo.text = getCodeName(convertedToCurrency)
-                    getRate(baseCurrency, convertedToCurrency)
-                }
-            })
-        }
+        binding.swipeToRefresh.setColorSchemeColors(
+            ContextCompat.getColor(this, R.color.blue_dark),
+            ContextCompat.getColor(this, R.color.orange_dark),
+            ContextCompat.getColor(this, R.color.green_dark),
+            ContextCompat.getColor(this, R.color.red_dark),
+        )
     }
 }
