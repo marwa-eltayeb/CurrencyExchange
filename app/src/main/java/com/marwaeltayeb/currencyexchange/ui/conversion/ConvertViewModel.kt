@@ -2,9 +2,10 @@ package com.marwaeltayeb.currencyexchange.ui.conversion
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.marwaeltayeb.currencyexchange.data.ConvertRepository
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
-import com.marwaeltayeb.currencyexchange.ui.main.RatesRepository
+import com.marwaeltayeb.currencyexchange.data.RatesRepository
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject

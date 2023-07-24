@@ -3,6 +3,7 @@ package com.marwaeltayeb.currencyexchange.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.marwaeltayeb.currencyexchange.data.RatesRepository
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber

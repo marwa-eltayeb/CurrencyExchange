@@ -1,4 +1,4 @@
-package com.marwaeltayeb.currencyexchange.ui.conversion
+package com.marwaeltayeb.currencyexchange.data
 
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
 import com.marwaeltayeb.currencyexchange.data.remote.RatesService

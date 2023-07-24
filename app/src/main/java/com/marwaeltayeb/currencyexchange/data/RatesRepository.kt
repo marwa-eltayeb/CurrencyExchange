@@ -1,4 +1,4 @@
-package com.marwaeltayeb.currencyexchange.ui.main
+package com.marwaeltayeb.currencyexchange.data
 
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
 import com.marwaeltayeb.currencyexchange.data.remote.RatesService
