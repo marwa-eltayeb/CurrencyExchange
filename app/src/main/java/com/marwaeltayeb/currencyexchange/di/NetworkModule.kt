@@ -2,16 +2,16 @@ package com.marwaeltayeb.currencyexchange.di
 
 import android.content.Context
 import com.marwaeltayeb.currencyexchange.data.remote.RatesService
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.BASE_URL
+import com.marwaeltayeb.currencyexchange.utils.Constant.Companion.BASE_URL
 import com.marwaeltayeb.currencyexchange.utils.NetworkUtils
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import timber.log.Timber
 import javax.inject.Singleton
 
 private const val TAG = "NetworkModule"
@@ -22,25 +22,36 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideCache(context: Context): Cache {
-        val cacheSize = (5 * 1024 * 1024).toLong()
+        val cacheSize = (10 * 1024 * 1024).toLong()
         return Cache(context.cacheDir, cacheSize)
     }
 
     @Provides
     @Singleton
     fun provideOkHttpClient(context: Context, cache: Cache): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
         return OkHttpClient.Builder()
             .cache(cache)
+            .addInterceptor(loggingInterceptor)
+            // Offline Interceptor
             .addInterceptor { chain ->
                 var request = chain.request()
-                if (NetworkUtils.isNetworkAvailable(context)) {
-                    request = request.newBuilder().header("Cache-Control", "public, max-age=" + 5).removeHeader("Pragma").build()
-                    Timber.tag(TAG).d("Response from Network")
-                } else {
-                    request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).removeHeader("Pragma").build()
-                    Timber.tag(TAG).d("Response from Cache")
+                if (!NetworkUtils.isNetworkAvailable(context)) {
+                    request = request.newBuilder()
+                        .header("Cache-Control", "public, only-if-cached, max-stale=${60 * 60 * 24 * 7}") // Cache for 7 days
+                        .build()
                 }
                 chain.proceed(request)
+            }
+            // Network Interceptor
+            .addNetworkInterceptor { chain ->
+                val response = chain.proceed(chain.request())
+                response.newBuilder()
+                    .header("Cache-Control", "public, max-age=600") // Cache for 10 minute
+                    .removeHeader("Pragma")
+                    .build()
             }
             .build()
     }

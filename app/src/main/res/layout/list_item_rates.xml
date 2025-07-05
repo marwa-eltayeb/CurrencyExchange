@@ -1,68 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="5dp"
+    card_view:elevation="5dp">
 
-    <androidx.cardview.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_width="@dimen/main_flag_width"
-        android:layout_height="@dimen/main_flag_height"
-        card_view:cardCornerRadius="3dp"
-        card_view:cardElevation="2dp"
-        card_view:elevation="1dp"
-        android:layout_margin="5dp">
+    <LinearLayout
+        android:padding="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/imgCountryFlag"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/item_flag_padding"
-            android:background="@color/white"
-            android:adjustViewBounds="true"
+            android:layout_width="@dimen/main_flag_width"
+            android:layout_height="@dimen/main_flag_height"
+            android:background="@drawable/border_flag"
             android:contentDescription="@string/currency_flag"
+            android:padding="@dimen/item_flag_padding"
             android:scaleType="fitXY"
             android:src="@color/grey" />
-    </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtCurrencyCode"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/item_currencyCode_height"
+                android:ellipsize="end"
+                android:gravity="start|bottom"
+                android:padding="@dimen/item_currencyCode_padding"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/item_currencyCode_textSize"
+                android:textStyle="bold"
+                tools:text="EUR" />
+
+            <TextView
+                android:id="@+id/txtCurrencyName"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/item_currencyName_height"
+                android:gravity="start"
+                android:padding="@dimen/item_currencyName_padding"
+                android:text="@string/euro"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/item_currencyName_textSize" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/txtCurrencyCode"
+            android:id="@+id/txtCurrencyRate"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/item_currencyCode_height"
-            android:ellipsize="end"
-            android:gravity="start|bottom"
-            android:textStyle="bold"
-            android:padding="@dimen/item_currencyCode_padding"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/item_currencyRate_marginEnd"
+            android:gravity="end|center"
+            android:padding="@dimen/item_currencyRate_padding"
             android:textColor="@color/grey"
-            android:textSize="@dimen/item_currencyCode_textSize"
-            tools:text="EUR" />
-
-        <TextView
-            android:id="@+id/txtCurrencyName"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/item_currencyName_height"
-            android:gravity="start"
-            android:padding="@dimen/item_currencyName_padding"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/item_currencyName_textSize"
-            android:text="Euro" />
+            android:textSize="@dimen/item_currencyRate_textSize"
+            tools:text="1.588" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/txtCurrencyRate"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="end|center"
-        android:textColor="@color/grey"
-        android:layout_marginEnd="@dimen/item_currencyRate_marginEnd"
-        android:padding="@dimen/item_currencyRate_padding"
-        android:textSize="@dimen/item_currencyRate_textSize"
-        tools:text="1.588" />
-</LinearLayout>
+</androidx.cardview.widget.CardView>

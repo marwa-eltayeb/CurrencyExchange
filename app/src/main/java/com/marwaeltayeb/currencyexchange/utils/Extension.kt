@@ -12,10 +12,15 @@ fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 }
 
 fun Activity.showSnackBar(message: String) {
-    val snackBar = Snackbar.make(this.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
+    val snackBar = Snackbar.make(this.findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE)
     snackBar.apply {
         setTextColor(ContextCompat.getColor(context, R.color.white))
         setBackgroundTint(ContextCompat.getColor(context, R.color.grey))
+        setAction("OK") {
+            dismiss()
+        }
+        setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
         show()
     }
 }
+

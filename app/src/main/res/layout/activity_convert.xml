@@ -73,7 +73,7 @@
         android:paddingBottom="30dp"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
-        android:background="@drawable/custom_border"
+        android:background="@drawable/border_box"
         android:orientation="vertical">
 
         <LinearLayout
@@ -89,8 +89,7 @@
                 android:layout_height="70dp"
                 android:layout_marginEnd="15dp"
                 android:contentDescription="@string/currency_flag"
-                android:scaleType="fitXY"
-                tools:src="@drawable/flag_usd" />
+                android:scaleType="fitXY" />
 
             <EditText
                 android:id="@+id/edt_firstConversion"
@@ -115,8 +114,7 @@
                 android:layout_height="70dp"
                 android:layout_marginEnd="15dp"
                 android:scaleType="fitXY"
-                android:contentDescription="@string/currency_flag"
-                tools:src="@drawable/flag_eur" />
+                android:contentDescription="@string/currency_flag" />
 
             <EditText
                 android:id="@+id/edt_secondConversion"

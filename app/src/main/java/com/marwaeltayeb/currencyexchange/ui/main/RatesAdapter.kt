@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.marwaeltayeb.currencyexchange.R
+import com.marwaeltayeb.currencyexchange.data.file.CurrencyData
 import com.marwaeltayeb.currencyexchange.databinding.ListItemRatesBinding
-import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getCodeName
-import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
+import com.marwaeltayeb.currencyexchange.data.model.Currency
+import com.marwaeltayeb.currencyexchange.data.file.CurrencyLoader
+import com.marwaeltayeb.currencyexchange.utils.CurrencyUtils.updateCurrencyUi
+import java.util.*
 
 class RatesAdapter : ListAdapter<Pair<String, Double>, RecyclerView.ViewHolder>(DiffCallback()){
 
@@ -24,25 +26,36 @@ class RatesAdapter : ListAdapter<Pair<String, Double>, RecyclerView.ViewHolder>(
     }
 
     class RatesViewHolder(var binding: ListItemRatesBinding) : RecyclerView.ViewHolder(binding.root){
+
         fun bind(currentRate: Pair<String, Double>) {
-            val currencyName = currentRate.first
+            val currencyCode = currentRate.first
             val currencyRate = currentRate.second
 
-            if(getCodeName(currencyName) !=  binding.root.resources.getString(R.string.none)) {
-                binding.imgCountryFlag.setImageResource(getFlag(currencyName))
-                binding.txtCurrencyCode.text = currencyName
-                binding.txtCurrencyName.text = getCodeName(currencyName)
+            val currencyInfo = CurrencyData.getCurrencyInfo()
+            val currency = currencyInfo[currencyCode]
+
+            if (currency != null) {
+                updateCurrencyUi(
+                    currencyCode,
+                    binding.imgCountryFlag,
+                    binding.txtCurrencyCode,
+                    binding.txtCurrencyName,
+                    binding.root.context
+                )
+
                 if (currentRate.second == 1.0) {
                     binding.txtCurrencyRate.text = "1"
                 } else {
-                    binding.txtCurrencyRate.text = String.format("%.4f", currencyRate)
+                    binding.txtCurrencyRate.text = String.format(Locale.US,"%.4f", currencyRate)
                 }
-            }else{
+            } else {
                 binding.root.visibility = View.GONE
                 binding.root.layoutParams = RecyclerView.LayoutParams(0, 0)
             }
         }
     }
+
+
 }
 
 private class DiffCallback : DiffUtil.ItemCallback<Pair<String, Double>>() {
@@ -54,3 +67,4 @@ private class DiffCallback : DiffUtil.ItemCallback<Pair<String, Double>>() {
         return oldItem == newItem
     }
 }
+

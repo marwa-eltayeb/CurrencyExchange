@@ -17,8 +17,8 @@ class DialogManager {
             dialog.setContentView(R.layout.custom_dialog)
 
             val listView: ListView = dialog.findViewById(R.id.lst_codes)
-            val codeAdapter: ListAdapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, Code.getCurrencyCodes(context))
-            listView.adapter = codeAdapter
+            val currencyCodeAdapter: ListAdapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, CurrencyCode.getCurrencyCodes(context))
+            listView.adapter = currencyCodeAdapter
 
             listView.setOnItemClickListener { _, _, myItemInt, _ ->
                 callback.onCallback(listView,myItemInt)
@@ -27,4 +27,8 @@ class DialogManager {
             dialog.show()
         }
     }
+}
+
+interface DialogCallback {
+    fun onCallback(listView : ListView, item : Int)
 }

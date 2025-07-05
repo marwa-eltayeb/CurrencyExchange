@@ -1,16 +1,23 @@
 package com.marwaeltayeb.currencyexchange.utils
 
-import java.time.LocalDate
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class DateUtils {
 
     companion object{
         fun getEndDate(): String {
-            return LocalDate.now().toString()
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            return dateFormat.format(calendar.time)
         }
 
         fun getStartDate(): String {
-            return LocalDate.now().minusDays(30).toString()
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_YEAR, -30)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            return dateFormat.format(calendar.time)
         }
     }
 }

@@ -19,16 +19,18 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.marwaeltayeb.currencyexchange.BaseApplication
 import com.marwaeltayeb.currencyexchange.R
 import com.marwaeltayeb.currencyexchange.databinding.ActivityConvertBinding
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.FROM_CURRENCY
-import com.marwaeltayeb.currencyexchange.utils.Const.Companion.TO_CURRENCY
-import com.marwaeltayeb.currencyexchange.utils.RateUtils.Companion.getFlag
+import com.marwaeltayeb.currencyexchange.utils.Constant.Companion.FROM_CURRENCY
+import com.marwaeltayeb.currencyexchange.utils.Constant.Companion.TO_CURRENCY
+import com.marwaeltayeb.currencyexchange.utils.CurrencyUtils.updateCurrencyUi
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getEndDate
 import com.marwaeltayeb.currencyexchange.utils.DateUtils.Companion.getStartDate
 import com.marwaeltayeb.currencyexchange.utils.DialogCallback
 import com.marwaeltayeb.currencyexchange.utils.DialogManager.Companion.showCustomAlertDialog
 import com.marwaeltayeb.currencyexchange.utils.showToast
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 private const val TAG = "ConvertActivity"
 
@@ -51,11 +53,19 @@ class ConvertActivity : AppCompatActivity() {
         binding = ActivityConvertBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.txtCurrencyCodeFrom.text = baseCurrency
-        binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
+        updateCurrencyUi(
+            currencyCode = baseCurrency,
+            flagImageView = binding.imgCurrencyFlagFrom,
+            currencyCodeTextView = binding.txtCurrencyCodeFrom,
+            context = this
+        )
 
-        binding.txtCurrencyCodeTo.text = convertedToCurrency
-        binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
+        updateCurrencyUi(
+            currencyCode = convertedToCurrency,
+            flagImageView = binding.imgCurrencyFlagTo,
+            currencyCodeTextView = binding.txtCurrencyCodeTo,
+            context = this
+        )
 
         setUpObservers()
         setupTextWatcher()
@@ -71,26 +81,30 @@ class ConvertActivity : AppCompatActivity() {
         covertViewModel.exchangeRateLiveData.observe(this) { rate ->
             Timber.tag(TAG).d("$baseCurrency to $convertedToCurrency = ${rate.get(0).second}")
             updatedRate = rate.get(0).second
-            binding.txtCurrencyRateTo.text = String.format("%.4f", rate.get(0).second)
+            binding.txtCurrencyRateTo.text = String.format(Locale.US, "%.4f", rate.get(0).second)
         }
 
-        covertViewModel.historicalRatesLiveData.observe(this) { data ->
-            val response = data.rates.toSortedMap()
+        covertViewModel.historicalRatesLiveData.observe(this) { historicalRates ->
+            historicalRates.let { ratesMap ->
+                val response = ratesMap.toSortedMap()
 
-            Timber.tag(TAG).d("getHistoricalRates: {${convertedToCurrency}} + ${response.values} ? ")
+                Timber.tag(TAG).d("getHistoricalRates: {${convertedToCurrency}} + ${response.values} ? ")
 
-            val listOfRates = arrayListOf<Entry>()
+                val listOfRates = arrayListOf<Entry>()
+                // Vertical Axis
+                val safeValues = response.values.map { it[convertedToCurrency] }.filterNotNull()
+                repeat(5) { i ->
+                    listOfRates.add(Entry(i.toFloat(), safeValues[i].toFloat()))
+                }
 
-            repeat(5) { i ->
-                listOfRates.add(Entry(i.toFloat(), response.values.elementAt(i)[convertedToCurrency]!!.toFloat()))
+                // Horizontal Axis
+                val dates = arrayListOf<String>()
+                repeat(5) { i ->
+                    dates.add(response.keys.elementAt(i))
+                }
+
+                setLineChart(dates, listOfRates)
             }
-
-            val dates = arrayListOf<String>()
-            repeat(5) { i ->
-                dates.add(response.keys.elementAt(i))
-            }
-
-            setLineChart(dates, listOfRates)
         }
     }
 
@@ -124,7 +138,7 @@ class ConvertActivity : AppCompatActivity() {
             binding.txtCurrencyRateTo.text = "???"
         } else {
             loadRate()
-            val text = String.format("%.4f",((binding.edtFirstConversion.text.toString().toDouble()) * updatedRate))
+            val text = String.format(Locale.US, "%.4f",((binding.edtFirstConversion.text.toString().toDouble()) * updatedRate))
             binding.edtSecondConversion.setText(text)
         }
     }
@@ -149,7 +163,7 @@ class ConvertActivity : AppCompatActivity() {
         lineDataSet.fillAlpha = 110
         lineDataSet.color = Color.RED
         lineDataSet.valueTextSize = 8f
-        lineDataSet.valueTextColor = Color.GREEN
+        lineDataSet.valueTextColor = Color.BLUE
         lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
         lineDataSet.setDrawFilled(true)
         lineDataSet.fillColor = ContextCompat.getColor(this, R.color.colorPrimaryVariant)
@@ -172,7 +186,7 @@ class ConvertActivity : AppCompatActivity() {
         // Hide Left Axis
         binding.lineChart.axisLeft.textColor = ContextCompat.getColor(this, R.color.white)
         // Change Label Text Color
-        binding.lineChart.legend.textColor = Color.GREEN
+        binding.lineChart.legend.textColor = Color.GRAY
         // Make Right Axis 5 labels
         binding.lineChart.axisRight.labelCount = 5
     }
@@ -188,8 +202,12 @@ class ConvertActivity : AppCompatActivity() {
         showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
             override fun onCallback(listView: ListView, item: Int) {
                 baseCurrency = listView.getItemAtPosition(item) as String
-                binding.imgCurrencyFlagFrom.setImageResource(getFlag(baseCurrency))
-                binding.txtCurrencyCodeFrom.text = baseCurrency
+                updateCurrencyUi(
+                    currencyCode = baseCurrency,
+                    flagImageView = binding.imgCurrencyFlagFrom,
+                    currencyCodeTextView = binding.txtCurrencyCodeFrom,
+                    context = this@ConvertActivity
+                )
                 loadRate()
                 loadHistoricalRates()
             }
@@ -200,8 +218,12 @@ class ConvertActivity : AppCompatActivity() {
         showCustomAlertDialog(this@ConvertActivity, object: DialogCallback{
             override fun onCallback(listView: ListView, item: Int) {
                 convertedToCurrency = listView.getItemAtPosition(item) as String
-                binding.imgCurrencyFlagTo.setImageResource(getFlag(convertedToCurrency))
-                binding.txtCurrencyCodeTo.text = convertedToCurrency
+                updateCurrencyUi(
+                    currencyCode = convertedToCurrency,
+                    flagImageView = binding.imgCurrencyFlagTo,
+                    currencyCodeTextView = binding.txtCurrencyCodeTo,
+                    context = this@ConvertActivity
+                )
                 loadRate()
                 loadHistoricalRates()
             }
