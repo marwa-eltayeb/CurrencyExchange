@@ -5,7 +5,7 @@
     android:id="@+id/swipeToRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".presentation.main.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -158,7 +158,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.main.MainActivity">
+            tools:context=".presentation.main.MainActivity">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_rates_list"

@@ -2,7 +2,7 @@ package com.marwaeltayeb.currencyexchange.data.remote
 
 import com.marwaeltayeb.currencyexchange.data.model.HistoricApiResponse
 import com.marwaeltayeb.currencyexchange.data.model.RateApiResponse
-import com.marwaeltayeb.currencyexchange.utils.Constant.Companion.API_KEY
+import com.marwaeltayeb.currencyexchange.core.utils.Constant.Companion.API_KEY
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
