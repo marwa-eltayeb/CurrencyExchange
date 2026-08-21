@@ -1,6 +1,7 @@
 package com.marwaeltayeb.currencyexchange
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import com.marwaeltayeb.currencyexchange.data.file.CurrencyData
 import com.marwaeltayeb.currencyexchange.di.AppComponent
 import com.marwaeltayeb.currencyexchange.di.DaggerAppComponent
@@ -10,6 +11,9 @@ open class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
         CurrencyData.initialize(applicationContext)
 
         if(BuildConfig.DEBUG){
